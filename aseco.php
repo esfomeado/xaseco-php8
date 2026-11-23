@@ -2002,7 +2002,7 @@ disabled */
 	 */
 	function getChatMessage($name) {
 
-		return htmlspecialchars_decode($this->chat_messages[$name][0]);
+		return htmlspecialchars_decode($this->chat_messages[$name][0], ENT_COMPAT);
 	}  // getChatMessage
 
 

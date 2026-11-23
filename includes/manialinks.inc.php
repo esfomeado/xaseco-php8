@@ -162,7 +162,7 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 		        '<format textsize="3" textcolor="' . $txt . '"/>' . LF;
 
 		// add header
-		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . $widths[0] . '"><text> $o' . htmlspecialchars(validateUTF8String($header)) . '</text></cell></line>' . LF;
+		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . $widths[0] . '"><text> $o' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '</text></cell></line>' . LF;
 
 		// add spacer
 		$xml .= '<format textsize="2" textcolor="' . $txt . '"/>' . LF;
@@ -178,13 +178,13 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (is_array($line[$i])) {
-							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text action="' . $line[$i][1] . '">  $o' . htmlspecialchars(validateUTF8String($line[$i][0])) . '</text></cell>';
+							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text action="' . $line[$i][1] . '">  $o' . htmlspecialchars(validateUTF8String($line[$i][0]), ENT_COMPAT) . '</text></cell>';
 						} else {
-							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i])) . '</text></cell>';
+							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '</text></cell>';
 						}
 					}
 				} else {
-					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[0])) . '</text></cell>';
+					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[0]), ENT_COMPAT) . '</text></cell>';
 				}
 			} else {  // spacer
 				$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell>';
@@ -219,11 +219,11 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 			        '" halign="center" valign="center" style="' . $icon[0] . '" substyle="' . $icon[1] . '"/>' . LF;
 			$xml .= '<label pos="-0.10 -0.025 -0.2" size="' . ($widths[0]-0.12) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		} else {
 			$xml .= '<label pos="-0.03 -0.025 -0.2" size="' . ($widths[0]-0.05) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		}
 		// add body
 		$xml .= '<quad pos="-' . ($widths[0]/2) . ' -' . (0.02+$hsize) .
@@ -253,20 +253,20 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 							        ' -' . ($hsize-0.008+$cnt*$bsize) .
 							        ' -0.2" size="' . ($widths[$i+1]-0.05) . ' ' . (0.02+$bsize) .
 							        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-							        '" text="' . htmlspecialchars(validateUTF8String($line[$i][0])) . '"/>' . LF;
+							        '" text="' . htmlspecialchars(validateUTF8String($line[$i][0]), ENT_COMPAT) . '"/>' . LF;
 						} else {
 							$xml .= '<label pos="-' . (0.025+array_sum(array_slice($widths,1,$i))) .
 							        ' -' . ($hsize-0.008+$cnt*$bsize) .
 							        ' -0.2" size="' . ($widths[$i+1]-0.05) . ' ' . (0.02+$bsize) .
 							        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-							        '" text="' . htmlspecialchars(validateUTF8String($line[$i])) . '"/>' . LF;
+							        '" text="' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '"/>' . LF;
 						}
 					}
 				} else {
 					$xml .= '<label pos="-0.025 -' . ($hsize-0.008+$cnt*$bsize) .
 					        ' -0.2" size="' . ($widths[0]-0.04) . ' ' . (0.02+$bsize) .
 					        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-					        '" text="' . htmlspecialchars(validateUTF8String($line[0])) . '"/>' . LF;
+					        '" text="' . htmlspecialchars(validateUTF8String($line[0]), ENT_COMPAT) . '"/>' . LF;
 				}
 			}
 		}
@@ -321,12 +321,12 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 		        '<format textsize="3" textcolor="' . $txt . '"/>' . LF;
 
 		// add header
-		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . $widths[0] . '"><text> $o' . htmlspecialchars(validateUTF8String($header)) . '</text></cell></line>' . LF;
+		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . $widths[0] . '"><text> $o' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '</text></cell></line>' . LF;
 
 		// add spacers & image
 		$xml .= '<format textsize="2" textcolor="' . $txt . '"/>' . LF;
 		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell></line>' . LF;
-		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><icon width="0.4" height="' . ($square ? '0.4' : '0.3') . '" halign="center">' . htmlspecialchars($links[0]) . '</icon></cell></line>' . LF;
+		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><icon width="0.4" height="' . ($square ? '0.4' : '0.3') . '" halign="center">' . htmlspecialchars($links[0], ENT_COMPAT) . '</icon></cell></line>' . LF;
 		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell></line>' . LF;
 
 		// add lines with optional columns
@@ -334,7 +334,7 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 			$xml .= '<line height=".046">';
 			if (!empty($line)) {
 				for ($i = 0; $i < count($widths)-1; $i++) {
-					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i])) . '</text></cell>';
+					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '</text></cell>';
 				}
 			} else {  // spacer
 				$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell>';
@@ -345,8 +345,8 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 		// add spacer & links
 		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell></line>' . LF;
 		$xml .= '<format textsize="3" textcolor="' . $txt . '"/>' . LF;
-		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . ($widths[0]/2) . '"><text halign="center">$o' . htmlspecialchars($links[2]) . '</text></cell>' .
-		              '<cell bgcolor="' . $bgd . '" width="' . ($widths[0]/2) . '"><text halign="center">$o' . htmlspecialchars($links[3]) . '</text></cell></line>' . LF;
+		$xml .= '<line><cell bgcolor="' . $bgd . '" width="' . ($widths[0]/2) . '"><text halign="center">$o' . htmlspecialchars($links[2], ENT_COMPAT) . '</text></cell>' .
+		              '<cell bgcolor="' . $bgd . '" width="' . ($widths[0]/2) . '"><text halign="center">$o' . htmlspecialchars($links[3], ENT_COMPAT) . '</text></cell></line>' . LF;
 
 		// add spacer, button (action "0" = close) & footer
 		$xml .= '<format textsize="2" textcolor="' . $txt . '"/>' . LF;
@@ -376,16 +376,16 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 			        '" halign="center" valign="center" style="' . $icon[0] . '" substyle="' . $icon[1] . '"/>' . LF;
 			$xml .= '<label pos="-0.10 -0.025 -0.2" size="' . ($widths[0]-0.12) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		} else {
 			$xml .= '<label pos="-0.03 -0.025 -0.2" size="' . ($widths[0]-0.05) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		}
 
 		// add image
 		$xml .= '<quad pos="-' . ($widths[0]/2) . ' -' . (0.02+$hsize) .
-		        ' -0.2" size="0.4 ' . ($square ? '0.4' : '0.3') . '" halign="center" image="' . htmlspecialchars($links[0]) . '"/>' . LF;
+		        ' -0.2" size="0.4 ' . ($square ? '0.4' : '0.3') . '" halign="center" image="' . htmlspecialchars($links[0], ENT_COMPAT) . '"/>' . LF;
 		// add body
 		$xml .= '<quad pos="-' . ($widths[0]/2) . ' -' . (0.33+($square?0.1:0)+$hsize) .
 		        ' -0.1" size="' . ($widths[0]-0.02) . ' ' . (0.02+$hsize+$lines*$bsize) .
@@ -403,7 +403,7 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 					        ' -' . (0.305+($square?0.1:0)+$hsize+$cnt*$bsize) .
 					        ' -0.2" size="' . $widths[$i+1] . ' ' . (0.02+$bsize) .
 					        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-					        '" text="' . htmlspecialchars(validateUTF8String($line[$i])) . '"/>' . LF;
+					        '" text="' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '"/>' . LF;
 				}
 			}
 		}
@@ -413,11 +413,11 @@ function display_manialink_track($login, $header, $icon, $links, $data, $widths,
 		$xml .= '<label pos="-' . ($widths[0]*0.25) . ' -' . (0.36+($square?0.1:0)+$hsize+$lines*$bsize) .
 		        ' -0.2" size="' . ($widths[0]/2) . ' ' . $hsize .
 		        '" halign="center" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-		        '" text="' . htmlspecialchars($links[2]) . '"/>' . LF;
+		        '" text="' . htmlspecialchars($links[2], ENT_COMPAT) . '"/>' . LF;
 		$xml .= '<label pos="-' . ($widths[0]*0.75) . ' -' . (0.36+($square?0.1:0)+$hsize+$lines*$bsize) .
 		        ' -0.2" size="' . ($widths[0]/2) . ' ' . $hsize .
 		        '" halign="center" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-		        '" text="' . htmlspecialchars($links[3]) . '"/>' . LF;
+		        '" text="' . htmlspecialchars($links[3], ENT_COMPAT) . '"/>' . LF;
 
 		// add button (action "0" = close) & footer
 		$xml .= '<quad pos="-' . ($widths[0]/2) . ' -' . (0.35+($square?0.1:0)+2*$hsize+$lines*$bsize) .
@@ -842,7 +842,7 @@ function event_manialink($aseco, $answer) {
 		        '<format textsize="3" textcolor="' . $txt . '"/>' . LF;
 
 		// add header
-		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . ($widths[0]-0.12) . '"><text> $o' . htmlspecialchars(validateUTF8String($header)) . '</text></cell>' .
+		$xml .= '<line><cell bgcolor="' . $spc . '" width="' . ($widths[0]-0.12) . '"><text> $o' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '</text></cell>' .
 		        '<cell bgcolor="' . $spc . '" width="0.12"><text halign="right">$n(' . $ptr . '/' . $tot . ')</text></cell></line>' . LF;
 
 		// add spacer
@@ -859,13 +859,13 @@ function event_manialink($aseco, $answer) {
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (is_array($line[$i])) {
-							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text action="' . $line[$i][1] . '">  $o' . htmlspecialchars(validateUTF8String($line[$i][0])) . '</text></cell>';
+							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text action="' . $line[$i][1] . '">  $o' . htmlspecialchars(validateUTF8String($line[$i][0]), ENT_COMPAT) . '</text></cell>';
 						} else {
-							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i])) . '</text></cell>';
+							$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[$i+1] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '</text></cell>';
 						}
 					}
 				} else {
-					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[0])) . '</text></cell>';
+					$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>  $o' . htmlspecialchars(validateUTF8String($line[0]), ENT_COMPAT) . '</text></cell>';
 				}
 			} else {  // spacer
 				$xml .= '<cell bgcolor="' . $bgd . '" width="' . $widths[0] . '"><text>$</text></cell>';
@@ -930,11 +930,11 @@ function event_manialink($aseco, $answer) {
 			        '" halign="center" valign="center" style="' . $icon[0] . '" substyle="' . $icon[1] . '"/>' . LF;
 			$xml .= '<label pos="-0.10 -0.025 -0.2" size="' . ($widths[0]-0.25) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		} else {
 			$xml .= '<label pos="-0.03 -0.025 -0.2" size="' . ($widths[0]-0.18) . ' ' . $hsize .
 			        '" halign="left" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
-			        '" text="' . htmlspecialchars(validateUTF8String($header)) . '"/>' . LF;
+			        '" text="' . htmlspecialchars(validateUTF8String($header), ENT_COMPAT) . '"/>' . LF;
 		}
 		$xml .= '<label pos="-' . ($widths[0]-0.02) . ' -0.025 -0.2" size="0.12 ' . $hsize .
 		        '" halign="right" style="' . $style['HEADER'][0]['TEXTSTYLE'][0] .
@@ -969,13 +969,13 @@ function event_manialink($aseco, $answer) {
 								        ' -' . ($hsize-0.008+$cnt*$bsize) .
 								        ' -0.2" size="' . ($widths[$i+1]-0.05) . ' ' . (0.02+$bsize) .
 								        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-								        '" text="' . htmlspecialchars(validateUTF8String($line[$i][0])) . '"/>' . LF;
+								        '" text="' . htmlspecialchars(validateUTF8String($line[$i][0]), ENT_COMPAT) . '"/>' . LF;
 							} else {
 								$xml .= '<label pos="-' . (0.025+array_sum(array_slice($widths,1,$i))) .
 								        ' -' . ($hsize-0.008+$cnt*$bsize) .
 								        ' -0.2" size="' . ($widths[$i+1]-0.05) . ' ' . (0.02+$bsize) .
 								        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-								        '" text="' . htmlspecialchars(validateUTF8String($line[$i])) . '"/>' . LF;
+								        '" text="' . htmlspecialchars(validateUTF8String($line[$i]), ENT_COMPAT) . '"/>' . LF;
 							}
 						}
 					}
@@ -983,7 +983,7 @@ function event_manialink($aseco, $answer) {
 					$xml .= '<label pos="-0.025 -' . ($hsize-0.008+$cnt*$bsize) .
 					        ' -0.2" size="' . ($widths[0]-0.04) . ' ' . (0.02+$bsize) .
 					        '" halign="left" style="' . $style['BODY'][0]['TEXTSTYLE'][0] .
-					        '" text="' . htmlspecialchars(validateUTF8String($line[0])) . '"/>' . LF;
+					        '" text="' . htmlspecialchars(validateUTF8String($line[0]), ENT_COMPAT) . '"/>' . LF;
 				}
 			}
 		}
@@ -1271,7 +1271,7 @@ function display_msgwindow($aseco, $msgs, $timeout) {
 	       '<quad sizen="93 ' . (1.5 + $cnt*2.5) . '" style="Bgs1" substyle="NavButton"/>' . LF;
 	$pos = -1;
 	foreach ($msgs as $msg) {
-		$xml .= '<label posn="1 ' . $pos . ' 1" sizen="91 1" style="TextRaceChat" text="' . htmlspecialchars(validateUTF8String($msg)) . '"/>' . LF .
+		$xml .= '<label posn="1 ' . $pos . ' 1" sizen="91 1" style="TextRaceChat" text="' . htmlspecialchars(validateUTF8String($msg), ENT_COMPAT) . '"/>' . LF .
 		$pos -= 2.5;
 	}
 	$xml .= '</frame></manialink>';
