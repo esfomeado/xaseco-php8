@@ -74,6 +74,9 @@ class Examsly {
 		if (count($this->stack) > 1) {
 			$from = array_pop($this->stack);
 			$to = $this->stack[count($this->stack)-1];
+			// first child: PHP 5 turned the empty string into an array implicitly
+			if ($this->struct[$to] === '')
+				$this->struct[$to] = array();
 			$this->struct[$to][$from][] = $this->struct[$from];
 			unset($this->struct[$from]);
 		}
