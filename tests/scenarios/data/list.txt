@@ -1,0 +1,16 @@
+best
+help
+karma
+longest
+newest
+noauthor
+nofinish
+nogold
+norank
+norecent
+novote
+oldest
+params
+recent
+shortest
+worst
