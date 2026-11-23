@@ -23,7 +23,7 @@ function chat_ranks($aseco, $command) {
 	foreach ($aseco->server->players->player_list as $pl) {
 		$rank = $rasp->getRank($pl->login);
 		$ranks[$pl->login] = $rank != 'None' ?
-		                     (integer) preg_replace('/\/.*/', '', $rank) :
+		                     (int) preg_replace('/\/.*/', '', $rank) :
 		                     PHP_INT_MAX;
 	}
 	asort($ranks);

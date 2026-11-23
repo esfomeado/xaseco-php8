@@ -30,7 +30,7 @@ class XmlrpcDB {
 	// Methods
 	//-----------------------------
 
-	function XmlrpcDB($webaccess, $url, $game, $login, $password, $tool, $version, $nation, $packmask = '') {
+	function __construct($webaccess, $url, $game, $login, $password, $tool, $version, $nation, $packmask = '') {
 
 		$this->_debug = 0;  // max debug level = 3
 		$this->_webaccess = $webaccess;
@@ -87,7 +87,7 @@ class XmlrpcDB {
 	function clearRequests($get_requests = false) {
 
 		if ($get_requests) {
-			$return = array($_requests, $_callbacks);
+			$return = array($this->_requests, $this->_callbacks);
 			$this->_initRequest();
 			return $return;
 		}

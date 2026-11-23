@@ -29,7 +29,7 @@ class Ogg_Comments {
 	 * @return Ogg_Comments
 	 *        If $comments is empty, no .ogg file
 	 */
-	public function Ogg_Comments($path, $utf8 = false) {
+	public function __construct($path, $utf8 = false) {
 
 		// check for local file or URL
 		if (strpos($path, '://') === false) {
@@ -101,12 +101,12 @@ class Ogg_Comments {
 
 		if ($utf8)
 			// return UTF8 or encode it in UTF8
-			return ((utf8_encode(utf8_decode($str)) == $str) ?
-			        $str : utf8_encode($str));
+			return ((mb_convert_encoding(mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8'), 'UTF-8', 'ISO-8859-1') == $str) ?
+			        $str : mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1'));
 		else
 			// decode it to ASCII or return ASCII
-			return ((utf8_encode(utf8_decode($str)) == $str) ?
-			        utf8_decode($str) : $str);
+			return ((mb_convert_encoding(mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8'), 'UTF-8', 'ISO-8859-1') == $str) ?
+			        mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8') : $str);
 	}  // decode_field
 
 	// Simple HTTP Get 1 Block function with timeout

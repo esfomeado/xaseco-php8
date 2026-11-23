@@ -42,7 +42,7 @@ class Checkpoints {
 	var $speccers;
 
 	// init empty checkpoints
-	function Checkpoints() {
+	function __construct() {
 		$this->loclrec = -1;  // -1 = off, 0 = own/last rec, 1-max = rec #1-max
 		$this->dedirec = -1;  // -1 = off, 0 = own/last rec, 1-30 = rec #1-30
 		$this->best_time = 0;
@@ -623,7 +623,7 @@ function store_checkp($aseco, $checkpt) {
 			$finish_item = new Record();
 			$finish_item->player = $aseco->server->players->getPlayer($login);
 			$finish_item->score = $checkpoints[$login]->curr_cps[$relcheck];
-			$finish_item->date = strftime('%Y-%m-%d %H:%M:%S');
+			$finish_item->date = date('Y-m-d H:i:s');
 			$finish_item->challenge = clone $aseco->server->challenge;
 			unset($finish_item->challenge->gbx);  // reduce memory usage
 			unset($finish_item->challenge->tmx);

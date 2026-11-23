@@ -177,7 +177,7 @@ function formatTimeH($MwTime, $hsec = true) {
 		return '???';
 	} else {
 		$hseconds = substr($MwTime, strlen($MwTime)-3, 2);
-		$MwTime = substr($MwTime, 0, strlen($MwTime)-3);
+		$MwTime = (int)substr($MwTime, 0, strlen($MwTime)-3);  // '' for times under 1s
 		$hours = floor($MwTime / 3600);
 		$MwTime = $MwTime - ($hours * 3600);
 		$minutes = floor($MwTime / 60);

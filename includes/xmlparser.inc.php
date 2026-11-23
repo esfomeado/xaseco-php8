@@ -66,7 +66,7 @@ class Examsly {
 			if ($this->utf8enc)
 				$this->struct[$index] .= rawurldecode($data);
 			else
-				$this->struct[$index] .= utf8_decode(rawurldecode($data));
+				$this->struct[$index] .= mb_convert_encoding(rawurldecode($data), 'ISO-8859-1', 'UTF-8');
 		}
 	}
 
@@ -100,7 +100,7 @@ class Examsly {
 					$xml .= $this->parseArrayElements(current($array), key($array));
 				} else {
 					// use raw, don't encode space into '+'
-					$xml .= rawurlencode(utf8_encode(current($array)));
+					$xml .= rawurlencode(mb_convert_encoding(current($array), 'UTF-8', 'ISO-8859-1'));
 				}
 				$xml .= '</'.$opt_tag.'>';
 			} else {
@@ -109,7 +109,7 @@ class Examsly {
 				} else {
 					$xml .= '<'.key($array).'>';
 					// use raw, don't encode space into '+'
-					$xml .= rawurlencode(utf8_encode(current($array)));
+					$xml .= rawurlencode(mb_convert_encoding(current($array), 'UTF-8', 'ISO-8859-1'));
 					$xml .= '</'.key($array).'>';
 				}
 			}

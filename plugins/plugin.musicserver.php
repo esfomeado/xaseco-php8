@@ -38,7 +38,7 @@ class Music {
 	var $jukebox;
 	var $messages;
 
-	function Music($settings) {
+	function __construct($settings) {
 
 		if (isset($settings['OVERRIDE_TRACK'][0]))
 			$this->override = (strtolower($settings['OVERRIDE_TRACK'][0]) == 'true');
@@ -195,8 +195,8 @@ function refresh_tags($aseco, $music) {
 	foreach ($music->tags as $song => $tags)
 		$list .= "\t<song>" . CRLF
 		       . "\t\t<file>" . $song . "</file>" . CRLF
-		       . "\t\t<title>" . utf8_encode($tags['Title']) . "</title>" . CRLF
-		       . "\t\t<artist>" . utf8_encode($tags['Artist']) . "</artist>" . CRLF
+		       . "\t\t<title>" . mb_convert_encoding($tags['Title'], 'UTF-8', 'ISO-8859-1') . "</title>" . CRLF
+		       . "\t\t<artist>" . mb_convert_encoding($tags['Artist'], 'UTF-8', 'ISO-8859-1') . "</artist>" . CRLF
 		       . "\t</song>" . CRLF;
 	$list .= "</tags>" . CRLF;
 
@@ -265,7 +265,7 @@ function chat_music($aseco, $command) {
 
 	if ($aseco->server->getGame() != 'TMF') {
 		$message = $aseco->getChatMessage('FOREVER_ONLY');
-		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
+		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $command['author']->login);
 		return;
 	}
 

@@ -90,7 +90,8 @@ function displayError($errno, $errstr, $errfile, $errline) {
 	global $aseco;
 
 	// check for error suppression
-	if (error_reporting() == 0) return;
+	// (PHP 8 no longer reports 0 under @, only the remaining fatal levels)
+	if (!(error_reporting() & $errno)) return;
 
 	switch ($errno) {
 	case E_USER_ERROR:
@@ -177,7 +178,7 @@ class Aseco {
 	/**
 	 * Initializes the server.
 	 */
-	function Aseco($debug) {
+	function __construct($debug) {
 		global $maxrecs;  // from rasp.settings.php
 
 		echo '# initialize XASECO ###########################################################' . CRLF;
@@ -1225,11 +1226,14 @@ class Aseco {
 
 	/**
 	 * Registers functions which are called on specific events.
+	 * Static, as plugins call it as Aseco::registerEvent() while they load
+	 * (PHP 8 no longer allows calling a non-static method statically).
 	 */
-	function registerEvent($event_type, $callback_func) {
+	static function registerEvent($event_type, $callback_func) {
+		global $aseco;
 
 		// registers a new event
-		$this->events[$event_type][] = $callback_func;
+		$aseco->events[$event_type][] = $callback_func;
 	}  // registerEvent
 
 	/**
@@ -1254,11 +1258,13 @@ class Aseco {
 
 	/**
 	 * Stores a new user command.
+	 * Static, as plugins call it as Aseco::addChatCommand() while they load.
 	 */
-	function addChatCommand($command_name, $command_help, $command_is_admin = false) {
+	static function addChatCommand($command_name, $command_help, $command_is_admin = false) {
+		global $aseco;
 
 		$chat_command = new ChatCommand($command_name, $command_help, $command_is_admin);
-		$this->chat_commands[] = $chat_command;
+		$aseco->chat_commands[] = $chat_command;
 	}  // addChatCommand
 
 	/**
@@ -1896,7 +1902,7 @@ disabled */
 		$finish_item = new Record();
 		$finish_item->player = $player;
 		$finish_item->score = $finish[2];
-		$finish_item->date = strftime('%Y-%m-%d %H:%M:%S');
+		$finish_item->date = date('Y-m-d H:i:s');
 		$finish_item->new = false;
 		$finish_item->challenge = clone $this->server->challenge;
 		unset($finish_item->challenge->gbx);  // reduce memory usage

@@ -300,9 +300,9 @@ function write_lists_xml($aseco)
 		$i++;
 	}
 	if ($empty) {
-		$list .= "<!-- format:" . CRLF;
-		$list .= "\t\t<login></login>" . CRLF;
-		$list .= "-->" . CRLF;
+		$lists .= "<!-- format:" . CRLF;
+		$lists .= "\t\t<login></login>" . CRLF;
+		$lists .= "-->" . CRLF;
 	}
 	$lists .= "\t</vip_list>" . CRLF . CRLF
 	        . "\t<vip_team_list>" . CRLF;
@@ -319,9 +319,9 @@ function write_lists_xml($aseco)
 		$i++;
 	}
 	if ($empty) {
-		$list .= "<!-- format:" . CRLF;
-		$list .= "\t\t<team></team>" . CRLF;
-		$list .= "-->" . CRLF;
+		$lists .= "<!-- format:" . CRLF;
+		$lists .= "\t\t<team></team>" . CRLF;
+		$lists .= "-->" . CRLF;
 	}
 	$lists .= "\t</vip_team_list>" . CRLF
 	        . "</lists>" . CRLF;
@@ -488,9 +488,9 @@ function write_bans_xml($aseco)
 		}
 	}
 	if ($empty) {
-		$list .= "<!-- format:" . CRLF;
-		$list .= "\t\t<login></login> <time></time>" . CRLF;
-		$list .= "-->" . CRLF;
+		$lists .= "<!-- format:" . CRLF;
+		$lists .= "\t\t<login></login> <time></time>" . CRLF;
+		$lists .= "-->" . CRLF;
 	}
 	$lists .= "\t</ban_list>" . CRLF
 	        . "</lists>" . CRLF;
@@ -765,7 +765,7 @@ function vote_finish($aseco)
 				$aseco->client->query('ChatSendServerMessage', $message);
 				if ($aseco->server->jfreu->autorank)
 				{
-					autorank($aseco, $command);
+					autorank($aseco, null);
 				}
 			}
 			else
@@ -1701,7 +1701,7 @@ function pf_kick($aseco, $finish)
 		$message = $yel.'>> '.$blu.'Player '.$whi.clean_nick($finish->player->nickname).$blu.' did not PF. ('.$red.'Kicked'.$blu.')';
 		$aseco->client->query('ChatSendServerMessage', $message);
 		// log console message
-		$aseco->console('[NoPfKick] player "{1}" kicked (rank: {2})', $player->login, $player->ladderrank);
+		$aseco->console('[NoPfKick] player "{1}" kicked (rank: {2})', $finish->player->login, $finish->player->ladderrank);
 		kicker_login($aseco, $finish->player->login);
 	}
 }  // pf_kick

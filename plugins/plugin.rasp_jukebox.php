@@ -1104,7 +1104,7 @@ function chat_add($aseco, $command) {
 				}
 				// rename ID filename to track's name
 				$md5new = md5_file($localfile);
-				$filename = trim(utf8_decode(stripColors($newtrk['name'])));
+				$filename = trim(mb_convert_encoding(stripColors($newtrk['name']), 'ISO-8859-1', 'UTF-8'));
 				$filename = preg_replace('/[^A-Za-z0-9 \'#=+~_,.-]/', '_', $filename);
 				$filename = preg_replace('/ +/', ' ', preg_replace('/_+/', '_', $filename));
 				$partialdir = $tmxtmpdir . $sepchar . $filename . '_' . $trkid . '.Challenge.gbx';

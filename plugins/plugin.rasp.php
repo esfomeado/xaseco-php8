@@ -27,6 +27,7 @@ Aseco::addChatCommand('active', 'Displays top 100 most active players');
 
 class Rasp {
 	var $aseco;
+	var $messages;
 	var $features;
 	var $ranks;
 	var $settings;

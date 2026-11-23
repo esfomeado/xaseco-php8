@@ -963,6 +963,7 @@ function getChallengesNoGold($player) {
 
 		// only in TMUF anyway
 		{
+			$envids = array('Stadium' => 11, 'Alpine' => 12, 'Bay' => 13, 'Coast' => 14, 'Island' => 15, 'Rally' => 16, 'Speed' => 17);
 			$head = 'Tracks You Didn\'t Beat Gold Score On:';
 			$msg = array();
 			$msg[] = array('Id', 'Name', 'Author', 'Env', 'Score');
@@ -1217,6 +1218,7 @@ function getChallengesNoAuthor($player) {
 
 		// only in TMUF anyway
 		{
+			$envids = array('Stadium' => 11, 'Alpine' => 12, 'Bay' => 13, 'Coast' => 14, 'Island' => 15, 'Rally' => 16, 'Speed' => 17);
 			$head = 'Tracks You Didn\'t Beat Author Score On:';
 			$msg = array();
 			$msg[] = array('Id', 'Name', 'Author', 'Env', 'Score');

@@ -810,11 +810,11 @@ function checkTables() {
 }  // checkTables
 
 function executeTeamForce($aseco) {
-	global $MatchSettings;
+	global $MatchSettings, $teamForceTeams;
 
 	foreach ($aseco->server->players->player_list as $player) {
 		$team = $MatchSettings['defaultTeam'];
-		if ($teamForceTeams[$player->login]) $team = $teamForceTeams[$player->login];
+		if (!empty($teamForceTeams[$player->login])) $team = $teamForceTeams[$player->login];
 		$player->teamname = $team;
 		foreach ($aseco->server->players->player_list as $recipient) {
 			if ($recipient->login == $player->login) {
@@ -833,7 +833,7 @@ function match_playerconnect($aseco, $player) {
 
 	$teamname = '';
 	if ($MatchSettings['teamForceEnabled']) {
-		if ($teamForceTeams[$player->login]) {
+		if (!empty($teamForceTeams[$player->login])) {
 			$teamname = $teamForceTeams[$player->login];
 			$player->teamname = $teamname;
 		} else {
@@ -1243,16 +1243,16 @@ function showHint($aseco, $player) {
 			$prob = 4;
 		}
 
-		srand(microtime()*1000000);
+		srand((int)(microtime(true)*1000000));
 		$showhint = rand(1,10);
 		if ($showhint > $firstprob) {
 			$hint = '';
-			srand(microtime()*100000);
+			srand((int)(microtime(true)*100000));
 			$showmainhint = (rand(1,10)) > $prob;
 			if ($showmainhint) {
 				$hint = $array[0];
 			} else {
-				srand(microtime()*10000000);
+				srand((int)(microtime(true)*10000000));
 				$hint = $array[rand(1,count($array)-1)];
 			}
 			$aseco->addCall('ChatSendServerMessageToLogin', array($aseco->formatColors('[Hint] '.$hint), $player->login));

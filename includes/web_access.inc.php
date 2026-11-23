@@ -122,7 +122,7 @@ class Webaccess {
 
 	var $_WebaccessList;
 
-	function Webaccess() {
+	function __construct() {
 		$this->_WebaccessList = array();
 	}
 
@@ -336,6 +336,7 @@ class WebaccessUrl {
 	var $_response;
 	var $_query_num;
 	var $_request_time;
+	var $_query_time;
 	var $_cookies;
 	var $_webaccess_str;
 	var $_bad_time;
@@ -359,7 +360,7 @@ class WebaccessUrl {
 	// Methods
 	//-----------------------------
 
-	function WebaccessUrl(&$wa, $host, $port, $keepalive = true, $keepalive_timeout = 600, $keepalive_max = 300, $agent = 'XMLaccess') {
+	function __construct(&$wa, $host, $port, $keepalive = true, $keepalive_timeout = 600, $keepalive_max = 300, $agent = 'XMLaccess') {
 		global $_web_access_compress_xmlrpc_request, $_web_access_retry_timeout;
 
 		$this->wa = &$wa;
@@ -749,7 +750,7 @@ class WebaccessUrl {
 				$time = microtime(true);
 				$this->_spool[0]['Times']['send'][1] = $time - $this->_spool[0]['Times']['send'][0];
 				//var_dump($this->_spool[0]['Datas']);
-				$this->_bad('Error(' . $errno . ') ' . $errstr . ', could not send data! ('
+				$this->_bad('Error, could not send data! ('
 				            . $sent . ' / ' . ($this->_spool[0]['DatasSize'] - $this->_spool[0]['DatasSent']) . ', '
 				            . $this->_spool[0]['DatasSent'] . ' / ' . $this->_spool[0]['DatasSize'] . ')');
 				if ($this->_wait)
@@ -815,7 +816,7 @@ class WebaccessUrl {
 							$time = microtime(true);
 							$this->_spool[0]['Times']['receive'][1] = $time - $this->_spool[0]['Times']['receive'][0];
 						}
-						$this->_bad('Error(' . $errno . ') ' . $errstr . ', could not read all data!');
+						$this->_bad('Error, could not read all data!');
 						return;
 					}
 				}
