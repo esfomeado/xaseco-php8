@@ -131,7 +131,7 @@ function ldb_connect($aseco) {
 
 	// check for main tables
 	$tables = array();
-	$res = $aseco->db->query('SHOW TABLES');
+	$res = $aseco->db->query_or_die('SHOW TABLES');
 	while ($res && ($row = $res->fetch_row()))
 		$tables[] = $row[0];
 	if ($res) $res->free();
@@ -145,7 +145,7 @@ function ldb_connect($aseco) {
 	}
 
 	// enlarge challenges 'Name' colum
-	$result = $aseco->db->query('DESC challenges Name');
+	$result = $aseco->db->query_or_die('DESC challenges Name');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'varchar(100)') {
@@ -154,7 +154,7 @@ function ldb_connect($aseco) {
 	}
 
 	// reduce challenges 'Environment' colum
-	$result = $aseco->db->query('DESC challenges Environment');
+	$result = $aseco->db->query_or_die('DESC challenges Environment');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'varchar(10)') {
@@ -164,7 +164,7 @@ function ldb_connect($aseco) {
 
 	// add players 'TeamName' column
 	$fields = array();
-	$result = $aseco->db->query('SHOW COLUMNS FROM players');
+	$result = $aseco->db->query_or_die('SHOW COLUMNS FROM players');
 	while ($result && ($row = $result->fetch_row()))
 		$fields[] = $row[0];
 	if ($result) $result->free();
@@ -174,14 +174,14 @@ function ldb_connect($aseco) {
 	}
 
 	// enlarge players 'NickName' & 'TimePlayed' columns
-	$result = $aseco->db->query('DESC players NickName');
+	$result = $aseco->db->query_or_die('DESC players NickName');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'varchar(100)') {
 		$aseco->console("[LocalDB] Alter 'players' column 'NickName'...");
 		$aseco->db->query("ALTER TABLE players MODIFY NickName varchar(100) NOT NULL default ''");
 	}
-	$result = $aseco->db->query('DESC players TimePlayed');
+	$result = $aseco->db->query_or_die('DESC players TimePlayed');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'int(10) unsigned') {
@@ -190,14 +190,14 @@ function ldb_connect($aseco) {
 	}
 
 	// enlarge records 'Id' & 'Score' columns
-	$result = $aseco->db->query('DESC records Id');
+	$result = $aseco->db->query_or_die('DESC records Id');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'int(11)') {
 		$aseco->console("[LocalDB] Alter 'records' column 'Id'...");
 		$aseco->db->query('ALTER TABLE records MODIFY Id int(11) auto_increment');
 	}
-	$result = $aseco->db->query('DESC records Score');
+	$result = $aseco->db->query_or_die('DESC records Score');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
 	if ($row[1] != 'int(11)') {
@@ -207,7 +207,7 @@ function ldb_connect($aseco) {
 
 	// add records 'Checkpoints' column
 	$fields = array();
-	$result = $aseco->db->query('SHOW COLUMNS FROM records');
+	$result = $aseco->db->query_or_die('SHOW COLUMNS FROM records');
 	while ($result && ($row = $result->fetch_row()))
 		$fields[] = $row[0];
 	if ($result) $result->free();
@@ -219,7 +219,7 @@ function ldb_connect($aseco) {
 	// change records old 'ChallengeId' key into new 'PlayerId' key and
 	//  add records new 'ChallengeId' key
 	$fields = array('PlayerId' => 0, 'ChallengeId' => 0);
-	$result = $aseco->db->query('SHOW INDEX FROM records');
+	$result = $aseco->db->query_or_die('SHOW INDEX FROM records');
 	while ($result && ($row = $result->fetch_row())) {
 		if (isset($fields[$row[2]]))
 			$fields[$row[2]]++;
@@ -237,7 +237,7 @@ function ldb_connect($aseco) {
 	// change players_extra 'playerID' key into primary key and
 	//  add players_extra 'donations' key
 	$fields = array();
-	$result = $aseco->db->query('SHOW INDEX FROM players_extra');
+	$result = $aseco->db->query_or_die('SHOW INDEX FROM players_extra');
 	while ($result && ($row = $result->fetch_row()))
 		$fields[] = $row[2];
 	if ($result) $result->free();
@@ -325,6 +325,15 @@ class XasecoDB extends mysqli {
 			} else {
 				trigger_error('[LocalDB] Lost MySQL connection, reconnect failed (' . $this->connect_error . ')', E_USER_WARNING);
 			}
+		}
+		return $result;
+	}
+
+	// for the start-up structure checks: no point in running without them
+	public function query_or_die(string $query): mysqli_result {
+		$result = $this->query($query);
+		if (!$result instanceof mysqli_result) {
+			trigger_error('[LocalDB] Could not check the database structure! (' . $this->errno . ': ' . $this->error . ')' . CRLF . 'sql = ' . $query, E_USER_ERROR);
 		}
 		return $result;
 	}

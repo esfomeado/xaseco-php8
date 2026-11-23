@@ -100,7 +100,7 @@ class Rasp {
 
 		// check for rs_* tables
 		$tables = array();
-		$res = $this->aseco->db->query('SHOW TABLES');
+		$res = $this->aseco->db->query_or_die('SHOW TABLES');
 		while ($res && ($row = $res->fetch_row()))
 			$tables[] = $row[0];
 		if ($res) $res->free();
@@ -111,7 +111,7 @@ class Rasp {
 
 		// get list of rs_times columns
 		$fields = array();
-		$res = $this->aseco->db->query('SHOW COLUMNS FROM rs_times');
+		$res = $this->aseco->db->query_or_die('SHOW COLUMNS FROM rs_times');
 		while ($res && ($row = $res->fetch_row()))
 			$fields[] = $row[0];
 		if ($res) $res->free();
@@ -128,14 +128,14 @@ class Rasp {
 		}
 
 		// enlarge rs_times 'ID' & 'score' columns
-		$res = $this->aseco->db->query('DESC rs_times ID');
+		$res = $this->aseco->db->query_or_die('DESC rs_times ID');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
 		if ($row[1] != 'int(11)') {
 			$this->aseco->console("[RASP] Alter 'rs_times' column 'ID'...");
 			$this->aseco->db->query('ALTER TABLE rs_times MODIFY ID int(11) auto_increment');
 		}
-		$res = $this->aseco->db->query('DESC rs_times score');
+		$res = $this->aseco->db->query_or_die('DESC rs_times score');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
 		if ($row[1] != 'int(11)') {
@@ -146,7 +146,7 @@ class Rasp {
 		// change rs_times old 'rs_times_player_track' key into new 'playerID' key
 		//  and add rs_times new 'ChallengeId' key
 		$fields = array('rs_times_player_track' => 0, 'challengeID' => 0);
-		$result = $this->aseco->db->query('SHOW INDEX FROM rs_times');
+		$result = $this->aseco->db->query_or_die('SHOW INDEX FROM rs_times');
 		while ($result && ($row = $result->fetch_row())) {
 			if (isset($fields[$row[2]]))
 				$fields[$row[2]]++;
@@ -162,7 +162,7 @@ class Rasp {
 		}
 
 		// reduce rs_karma 'Score' column
-		$res = $this->aseco->db->query('DESC rs_karma Score');
+		$res = $this->aseco->db->query_or_die('DESC rs_karma Score');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
 		if ($row[1] != 'tinyint(4)') {
