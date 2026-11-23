@@ -718,9 +718,12 @@ function http_get_file($url, $openonly = false) {
 	stream_set_timeout($fp, 2);
 	$res = '';
 	$info['timed_out'] = false;
+	$deadline = microtime(true) + 10;  // overall limit: the 2s timeout is per read
 	while (!feof($fp) && !$info['timed_out']) {
 		$res .= fread($fp, 512);
 		$info = stream_get_meta_data($fp);
+		if (microtime(true) > $deadline)
+			$info['timed_out'] = true;
 	}
 	fclose($fp);
 
