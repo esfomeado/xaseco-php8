@@ -155,6 +155,10 @@ function music_loadsettings($aseco) {
 function music_shutdown($aseco) {
 	global $music_server;
 
+	// not started yet (XAseco stopped during start-up)
+	if (!isset($music_server))
+		return;
+
 	// disable music
 	$aseco->client->query('SetForcedMusic', $music_server->override, '');
 }  // music_loadsettings
