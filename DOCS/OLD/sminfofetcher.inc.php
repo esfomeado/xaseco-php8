@@ -28,7 +28,7 @@ class SMInfoFetcher {
 	 * @return SMInfoFetcher
 	 *        If $name is empty, track was not found
 	 */
-	public function SMInfoFetcher($id) {
+	public function __construct($id) {
 
 		// check for UID string
 		if (preg_match('/^\w{26,27}$/', $id)) {
@@ -41,7 +41,7 @@ class SMInfoFetcher {
 		}
 	}  // SMInfoFetcher
 
-	public function __set_state($import) {
+	public static function __set_state($import) {
 
 		$sm = new SMInfoFetcher(0);
 
