@@ -827,7 +827,7 @@ function banfor($aseco, $login, $time)  // time: mins
 
 	// format time value
 	if ($time > 60) {  // check for >1 hour
-		$ban = sprintf("%d ${red}hour%s  ${whi}%02d ${red}min%s",
+		$ban = sprintf("%d {$red}hour%s  {$whi}%02d {$red}min%s",
 		               $time / 60, (floor($time / 60) == 1 ? '' : 's'),
 		               $time % 60, (($time % 60) == 1 ? '' : 's'));
 	} else {
@@ -935,7 +935,7 @@ disabled */
 		$rank = str_replace(' ', '$n $m', number_format($player->ladderrank, 0, ' ', ' '));
 		// format time value
 		if ($ban > 60) {  // check for >1 hour
-			$ban = sprintf("%d ${red}hour%s  ${whi}%02d ${red}min%s",
+			$ban = sprintf("%d {$red}hour%s  {$whi}%02d {$red}min%s",
 			               $ban / 60, (floor($ban / 60) == 1 ? '' : 's'),
 			               $ban % 60, (($ban % 60) == 1 ? '' : 's'));
 		} else {

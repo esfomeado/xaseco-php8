@@ -244,7 +244,7 @@ class TMNDataFetcher {
 					return;
 
 				$server = $this->serverlogin;  // can't use object member inside pattern
-				if (preg_match("/^${server};([^;]+);([^;]+);([A-Z]+);/m", $page, $fields)) {
+				if (preg_match("/^{$server};([^;]+);([^;]+);([A-Z]+);/m", $page, $fields)) {
 					$this->serverdesc = $fields[1];
 					$this->servernick = ($fields[2] != 'x' ? urldecode($fields[2]) : '');
 					$this->servernation = $fields[3];
