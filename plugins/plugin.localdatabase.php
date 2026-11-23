@@ -291,8 +291,10 @@ function ldb_open($aseco) {
 		$socket = $m[2];
 	}
 
-	$aseco->db = new mysqli($host, $ldb_settings['mysql']['login'],
-	                        $ldb_settings['mysql']['password'], null, $port, $socket);
+	$aseco->db = new XasecoDB($host, $ldb_settings['mysql']['login'],
+	                          $ldb_settings['mysql']['password'], null, $port, $socket);
+	$aseco->db->connect_params = array($host, $ldb_settings['mysql']['login'], $ldb_settings['mysql']['password'],
+	                                   $ldb_settings['mysql']['database'], $port, $socket);
 	if ($aseco->db->connect_errno) {
 		trigger_error('[LocalDB] Could not authenticate at MySQL server! (' . $aseco->db->connect_error . ')', E_USER_ERROR);
 	}
@@ -302,6 +304,31 @@ function ldb_open($aseco) {
 		trigger_error('[LocalDB] Could not find MySQL database!', E_USER_ERROR);
 	}
 }  // ldb_open
+
+/**
+ * The MySQL connection: reconnects and retries once when the server went away
+ * (e.g. a MariaDB restart while players are online; ldb_reconnect() only
+ * checks the connection while the server is empty).
+ */
+class XasecoDB extends mysqli {
+	public $connect_params = array();
+
+	public function query(string $query, int $result_mode = MYSQLI_STORE_RESULT): mysqli_result|bool {
+		$result = @parent::query($query, $result_mode);
+		// 2006 = MySQL server has gone away, 2013 = lost connection during query
+		if ($result === false && ($this->errno == 2006 || $this->errno == 2013) && $this->connect_params) {
+			global $aseco;
+			list($host, $login, $password, $database, $port, $socket) = $this->connect_params;
+			if (@$this->real_connect($host, $login, $password, $database, $port, $socket)) {
+				$aseco->console('[LocalDB] Reconnected to MySQL Server');
+				$result = parent::query($query, $result_mode);
+			} else {
+				trigger_error('[LocalDB] Lost MySQL connection, reconnect failed (' . $this->connect_error . ')', E_USER_WARNING);
+			}
+		}
+		return $result;
+	}
+}  // class XasecoDB
 
 // called @ onSync
 function ldb_sync($aseco) {
