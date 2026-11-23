@@ -136,7 +136,7 @@ class IXR_Value {
 			case 'double':
 				return '<double>' . $this->data . '</double>';
 			case 'string':
-				return '<string>' . htmlspecialchars($this->data, ENT_COMPAT) . '</string>';
+				return '<string>' . htmlspecialchars((string)$this->data, ENT_COMPAT) . '</string>';  // null as ''
 			case 'array':
 				$return = '<array><data>' . LF;
 				foreach ($this->data as $item) {
