@@ -1587,8 +1587,7 @@ function event_jfreu($aseco, $answer) {
 
 	// get player & possible parameter
 	$player = $aseco->server->players->getPlayer($answer[1]);
-	if (isset($player->panels['plyparam']))
-		$param = $player->panels['plyparam'];
+	$param = isset($player->panels['plyparam']) ? $player->panels['plyparam'] : '';
 
 	// check for /jfreu badword command
 	if ($answer[2] >= -4200 && $answer[2] <= -4001) {

@@ -135,6 +135,7 @@ function displayError($errno, $errstr, $errfile, $errline) {
 /**
  * Here XASECO actually starts.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Aseco {
 
 	/**
@@ -776,7 +777,7 @@ class Aseco {
 			$endtime = microtime(true);
 			$delay = 200000 - ($endtime - $starttime) * 1000000;
 			if ($delay > 0)
-				usleep($delay);
+				usleep((int)$delay);
 			// make sure the script does not timeout
 			@set_time_limit($this->settings['script_timeout']);
 		}

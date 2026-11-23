@@ -885,7 +885,7 @@ class WebaccessUrl {
 		if ($state === true) {
 			$this->_bad_timeout = 0;  // reset error timeout
 
-			$this->_spool[0]['Times']['receive'][1] = $time - $this->_spool[0]['Times']['receive'][0];
+			$this->_spool[0]['Times']['receive'][1] = microtime(true) - $this->_spool[0]['Times']['receive'][0];
 			$this->_spool[0]['State'] = 'DONE';
 
 			// store http/xml response in global $_Webaccess_last_response for debugging use

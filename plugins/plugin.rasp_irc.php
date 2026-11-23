@@ -32,6 +32,7 @@ function irc_onsync($aseco, $null) {
 		irc_send('USER ' . $CONFIG['nick'] . ' codedemons.net codedemons.net :' . $CONFIG['name']);
 		irc_send('NICK ' . $CONFIG['nick'] . ' codedemons.net');
 
+		$old_buffer = '';
 		/* Here is the loop. Read the incoming data (from the socket connection) */
 		while (!feof($con['socket'])) {
 			/* Think of $con['buffer']['all'] as a line of chat messages.

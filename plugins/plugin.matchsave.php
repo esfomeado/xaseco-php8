@@ -121,6 +121,7 @@ function showMatchHelp($player) {
 
 	} else {
 		$runningMatch = $MatchSettings['col_window_highlite'].'none';
+		$leader = '';
 	}
 
 	$matchStatus = '$f00OFF';
@@ -615,6 +616,7 @@ disabled */
 	} elseif ($command['params'][0] == 'teams' || $command['params'][0] == 'players') {
 
 		$search = '';
+		$full = false;
 		if ($command['params'][0] == 'players')
 			$full = true;
 		showTeamList($aseco, $admin, $full);

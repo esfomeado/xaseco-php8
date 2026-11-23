@@ -6,6 +6,7 @@
 /**
  * Structure of a Record.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Record {
 	var $player;
 	var $challenge;
@@ -103,6 +104,7 @@ class RecordList {
  * Can be instantiated with an RPC 'GetPlayerInfo' or
  * 'GetDetailedPlayerInfo' response.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Player {
 	var $id;
 	var $pid;
@@ -283,6 +285,7 @@ class PlayerList {
  * Can store challenge information.
  * You can instantiate with an RPC 'GetChallengeInfo' response.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Challenge {
 	var $id;
 	var $name;
@@ -377,6 +380,7 @@ class ChatCommand {
 /**
  * Stores basic information of the server XASECO is running on.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Server {
 	var $id;
 	var $name;
@@ -445,6 +449,7 @@ class Server {
 /**
  * Contains information to the current game which is played.
  */
+#[\AllowDynamicProperties]  // plugins attach their own data
 class Gameinfo {
 	var $mode;
 	var $numchall;

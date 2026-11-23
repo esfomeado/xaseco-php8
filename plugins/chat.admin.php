@@ -5043,6 +5043,8 @@ function chat_admin($aseco, $command) {
 				        break;
 				case 5: $res = $aseco->client->query($method, $args[0], $args[1], $args[2], $args[3], $args[4]);
 				        break;
+				default: $res = false;  // more parameters than supported
+				        break;
 				}
 				// process result
 				if ($res) {
@@ -5364,8 +5366,7 @@ function event_admin($aseco, $answer) {
 
 	// get player & possible parameter
 	$player = $aseco->server->players->getPlayer($answer[1]);
-	if (isset($player->panels['plyparam']))
-		$param = $player->panels['plyparam'];
+	$param = isset($player->panels['plyparam']) ? $player->panels['plyparam'] : '';
 
 	// check for /admin warn command
 	if ($answer[2] >= 2201 && $answer[2] <= 2400) {
