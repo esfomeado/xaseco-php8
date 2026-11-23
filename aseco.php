@@ -141,6 +141,7 @@ class Aseco {
 	 * Public fields
 	 */
 	var $client;
+	var $db;  // mysqli connection, opened by plugin.localdatabase.php
 	var $xml_parser;
 	var $script_timeout;
 	var $debug;
@@ -2369,14 +2370,14 @@ disabled */
 		} else {
 			$query = 'SELECT id FROM players
 			          WHERE login=' . quotedString($login);
-			$result = mysql_query($query);
-			if (mysql_num_rows($result) > 0) {
-				$row = mysql_fetch_row($result);
+			$result = $this->db->query($query);
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_row();
 				$rtn = $row[0];
 			} else {
 				$rtn = 0;
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		return $rtn;
 	}  // getPlayerId
@@ -2392,14 +2393,14 @@ disabled */
 		} else {
 			$query = 'SELECT nickname FROM players
 			          WHERE login=' . quotedString($login);
-			$result = mysql_query($query);
-			if (mysql_num_rows($result) > 0) {
-				$row = mysql_fetch_row($result);
+			$result = $this->db->query($query);
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_row();
 				$rtn = $row[0];
 			} else {
 				$rtn = '';
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		return $rtn;
 	}  // getPlayerNick
@@ -2445,9 +2446,9 @@ disabled */
 			// check offline players database
 			$query = 'SELECT * FROM players
 			          WHERE login=' . quotedString($param);
-			$result = mysql_query($query);
-			if (mysql_num_rows($result) > 0) {
-				$row = mysql_fetch_object($result);
+			$result = $this->db->query($query);
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_object();
 				// create dummy player object
 				$target = new Player();
 				$target->id = $row->Id;
@@ -2458,7 +2459,7 @@ disabled */
 				$target->wins = $row->Wins;
 				$target->timeplayed = $row->TimePlayed;
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 
 		// found anyone anywhere?
@@ -2477,14 +2478,14 @@ disabled */
 
 		$query = 'SELECT Id FROM challenges
 		          WHERE Uid=' . quotedString($uid);
-		$res = mysql_query($query);
-		if (mysql_num_rows($res) > 0) {
-			$row = mysql_fetch_row($res);
+		$res = $this->db->query($query);
+		if ($res->num_rows > 0) {
+			$row = $res->fetch_row();
 			$rtn = $row[0];
 		} else {
 			$rtn = 0;
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 		return $rtn;
 	}  // getChallengeId
 

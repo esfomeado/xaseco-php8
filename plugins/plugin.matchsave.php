@@ -767,6 +767,7 @@ function showPlaylistList($aseco, $player, $files, $search) {
 }  // showPlaylistList
 
 function checkTables() {
+	global $aseco;
 
 	$query = 'CREATE TABLE IF NOT EXISTS `match_main` (
 							`ID` mediumint(9) NOT NULL auto_increment,
@@ -774,7 +775,7 @@ function checkTables() {
 							`dttmrun` timestamp NOT NULL default Now(),
 							PRIMARY KEY	(`ID`)
 						) ENGINE=MyISAM';
-	mysql_query($query);
+	$aseco->db->query($query);
 
 	$query = 'CREATE TABLE IF NOT EXISTS `match_details` (
 							`matchID` mediumint(9) NOT NULL,
@@ -784,26 +785,26 @@ function checkTables() {
 							`score` mediumint(9),
 							PRIMARY KEY (`matchID`,`playerID`)
 						) ENGINE=MyISAM';
-	mysql_query($query);
+	$aseco->db->query($query);
 
 	$tables = array();
-	$res = mysql_query('SHOW TABLES');
-	while ($row = mysql_fetch_row($res))
+	$res = $aseco->db->query('SHOW TABLES');
+	while ($res && ($row = $res->fetch_row()))
 		$tables[] = $row[0];
-	mysql_free_result($res);
+	if ($res) $res->free();
 
 	$check = array();
 	$check[1] = in_array('match_main', $tables);
 	$check[2] = in_array('match_details', $tables);
 
 	// add 'teamname' column if not yet done
-	$res = mysql_query('SELECT teamname FROM players limit 1');
+	$res = $aseco->db->query('SELECT teamname FROM players limit 1');
 	if ($res == false) {
-		if (mysql_errno() == 1054) {
-			mysql_query('ALTER TABLE players ADD TeamName char(60)');
+		if ($aseco->db->errno == 1054) {
+			$aseco->db->query('ALTER TABLE players ADD TeamName char(60)');
 		}
 	} else {
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	return ($check[1] && $check[2]);
@@ -838,11 +839,11 @@ function match_playerconnect($aseco, $player) {
 			$player->teamname = $teamname;
 		} else {
 			$query = 'SELECT teamname FROM players WHERE Login=' . quotedString($player->login) . ' AND Game=' . quotedString($aseco->server->getGame());
-			$result = mysql_query($query);
-			if (mysql_num_rows($result) > 0) {
-				$teamname = mysql_result($result, 0, 'teamname');
+			$result = $aseco->db->query($query);
+			if ($result->num_rows > 0) {
+				$teamname = $result->fetch_object()->teamname;
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 			$player->teamname = $teamname;
 		}
 		foreach ($aseco->server->players->player_list as $recipient) {
@@ -856,11 +857,11 @@ function match_playerconnect($aseco, $player) {
 	} else {
 		if ($player->teamname == '') {
 			$query = 'SELECT teamname FROM players WHERE Login=' . quotedString($player->login) . ' AND Game=' . quotedString($aseco->server->getGame());
-			$result = mysql_query($query);
-			if (mysql_num_rows($result) > 0) {
-				$teamname = mysql_result($result, 0, 'teamname');
+			$result = $aseco->db->query($query);
+			if ($result->num_rows > 0) {
+				$teamname = $result->fetch_object()->teamname;
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 			$player->teamname = $teamname;
 		}
 	}
@@ -875,15 +876,15 @@ function match_playerdisconnect($aseco, $player) {
 
 	if ($player->teamname != '') {
 		$query = 'SELECT teamname FROM players WHERE Login=' . quotedString($player->login) . ' AND Game=' . quotedString($aseco->server->getGame());
-		$result = mysql_query($query);
-		if (mysql_num_rows($result) > 0) {
-			$teamname = mysql_result($result, 0, 'teamname');
+		$result = $aseco->db->query($query);
+		if ($result->num_rows > 0) {
+			$teamname = $result->fetch_object()->teamname;
 			if ($teamname == '') {
 				$sql = 'UPDATE players SET teamname=' . quotedString($player->teamname) . ' WHERE login=' . quotedString($player->login);
-				mysql_query($sql);
+				$aseco->db->query($sql);
 			}
 		}
-		mysql_free_result($result);
+		if ($result) $result->free();
 	}
 }  // match_playerdisconnect
 
@@ -986,29 +987,29 @@ function chat_teamname($aseco, $command) {
 	elseif ($teamname == 'dbsave') {
 
 		$sql = 'UPDATE players SET teamname=' . quotedString($player->teamname) . ' WHERE login=' . quotedString($player->login);
-		mysql_query($sql);
+		$aseco->db->query($sql);
 		$aseco->addCall('ChatSendServerMessageToLogin', array('Teamname saved to database.', $player->login));
 	}
 	elseif ($teamname == 'dbclear') {
 
 		$sql = 'UPDATE players SET teamname=\'\' WHERE login=' . quotedString($player->login);
-		mysql_query($sql);
+		$aseco->db->query($sql);
 		$aseco->addCall('ChatSendServerMessageToLogin', array('Teamname cleared from database.', $player->login));
 	}
 	elseif ($teamname == 'dbget') {
 
 		$query = 'SELECT teamname FROM players WHERE Login=' . quotedString($player->login) . ' AND Game=' . quotedString($aseco->server->getGame());
-		$result = mysql_query($query);
+		$result = $aseco->db->query($query);
 		if (!$result) {
-			$aseco->addCall('ChatSendServerMessageToLogin', array('MySQL error = ' . mysql_error() . ', teamname not changed', $player->login));
+			$aseco->addCall('ChatSendServerMessageToLogin', array('MySQL error = ' . $aseco->db->error . ', teamname not changed', $player->login));
 		} else {
-			$row = mysql_fetch_row($result);
+			$row = $result->fetch_row();
 			$player->teamname = $row[0];
 			if (!$matchTeamNameColorsAllowed) {
 				$player->teamname = stripColors($player->teamname);
 			}
 			$aseco->addCall('ChatSendServerMessageToLogin', array('You have joined team ' . $player->teamname . '.', $player->login));
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 	}
 	else {
@@ -1062,8 +1063,8 @@ function match_endrace($aseco, $info) {
 	$db_challenge_id = $aseco->getChallengeId($challenge['UId']);
 
 	$sql = 'INSERT INTO match_main (trackID) VALUES (' . $db_challenge_id . ')';
-	mysql_query($sql);
-	$newID = mysql_insert_id();
+	$aseco->db->query($sql);
+	$newID = $aseco->db->insert_id;
 
 	$template = $MatchSettings['template'];
 	$stgout = str_replace('{HEADER}', '', $template['header']);
@@ -1110,12 +1111,12 @@ function match_endrace($aseco, $info) {
 
 				if ($MatchSettings['savedb']) {
 					$sql = 'SELECT Id FROM players WHERE Login=' . quotedString($player->login) . ' AND Game=' . quotedString($aseco->server->getGame());
-					$result = mysql_query($sql);
-					$db_player = mysql_fetch_array($result);
+					$result = $aseco->db->query($sql);
+					$db_player = $result ? $result->fetch_array() : null;
 					$db_player_id = $db_player['Id'];
-					mysql_free_result($result);
+					if ($result) $result->free();
 					$sql = 'INSERT INTO match_details (matchID, playerID, teamname, points, score) VALUES (' . $newID . ', ' . $db_player_id . ', ' . quotedString($player->teamname) . ', ' . $pts . ', ' . $ranking[$i]['BestTime'] . ')';
-					mysql_query($sql);
+					$aseco->db->query($sql);
 				}
 			}
 		}

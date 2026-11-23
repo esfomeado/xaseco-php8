@@ -73,34 +73,34 @@ function KarmaVote($aseco, $command, $vote) {
 	if ($karma_require_finish > 0) {
 		$query = 'SELECT id FROM rs_times
 		          WHERE playerID=' . $pid . ' AND challengeID=' . $aseco->server->challenge->id;
-		$res = mysql_query($query);
+		$res = $aseco->db->query($query);
 		// check whether player finished required number of times
-		if (mysql_num_rows($res) < $karma_require_finish) {
+		if ($res->num_rows < $karma_require_finish) {
 			// show chat message
 			$message = formatText($rasp->messages['KARMA_REQUIRE'][0],
 			                      $karma_require_finish,
 			                      ($karma_require_finish == 1 ? '' : 's'));
 			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
-			mysql_free_result($res);
+			if ($res) $res->free();
 			return;
 		} else {
-			mysql_free_result($res);
+			if ($res) $res->free();
 		}
 	}
 
 	$command['params'] = '';  // clear sneaky params before chat_karma
 	$query = 'SELECT Id, Score FROM rs_karma
 	          WHERE PlayerId=' . $pid . ' AND ChallengeId=' . $aseco->server->challenge->id;
-	$res = mysql_query($query);
-	if (mysql_num_rows($res) > 0) {
-		$row = mysql_fetch_object($res);
+	$res = $aseco->db->query($query);
+	if ($res->num_rows > 0) {
+		$row = $res->fetch_object();
 		if ($row->Score == $vote) {
 			$message = $rasp->messages['KARMA_VOTED'][0];
 			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 		} else {
 			$query2 = 'UPDATE rs_karma SET Score=' . $vote . ' WHERE Id=' . $row->Id;
-			mysql_query($query2);
-			if (mysql_affected_rows() < 1) {
+			$aseco->db->query($query2);
+			if ($aseco->db->affected_rows < 1) {
 				$message = $rasp->messages['KARMA_FAIL'][0];
 				$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 			} else {
@@ -113,8 +113,8 @@ function KarmaVote($aseco, $command, $vote) {
 	} else {
 		$query2 = 'INSERT INTO rs_karma (Score, PlayerId, ChallengeId)
 		           VALUES (' . $vote . ', ' . $pid . ', ' . $aseco->server->challenge->id . ')';
-		mysql_query($query2);
-		if (mysql_affected_rows() < 1) {
+		$aseco->db->query($query2);
+		if ($aseco->db->affected_rows < 1) {
 			$message = $rasp->messages['KARMA_FAIL'][0];
 			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 		} else {
@@ -124,7 +124,7 @@ function KarmaVote($aseco, $command, $vote) {
 			$aseco->releaseEvent('onKarmaChange', getKarmaValues($aseco->server->challenge->id));
 		}
 	}
-	mysql_free_result($res);
+	if ($res) $res->free();
 }  // KarmaVote
 
 // Show to a player if $login defined, otherwise show to all players.
@@ -170,9 +170,9 @@ function chat_karma($aseco, $command) {
 			// get track ID and name
 			$query = 'SELECT Id,Name FROM challenges
 			          WHERE Uid=' . quotedString($uid);
-			$res = mysql_query($query);
-			$row = mysql_fetch_object($res);
-			mysql_free_result($res);
+			$res = $aseco->db->query($query);
+			$row = $res ? $res->fetch_object() : null;
+			if ($res) $res->free();
 
 			$karma = getKarma($row->Id, $login);
 			$message = formatText($rasp->messages['KARMA_TRACK'][0],
@@ -195,16 +195,17 @@ function chat_karma($aseco, $command) {
 }  // chat_karma
 
 function getKarmaValues($cid) {
+	global $aseco;
 
 	// get vote sum and count
 	$query = 'SELECT SUM(score) AS karma, COUNT(score) AS total FROM rs_karma
 	          WHERE ChallengeId=' . $cid;
-	$res = mysql_query($query);
-	if (mysql_num_rows($res) == 1) {
-		$row = mysql_fetch_object($res);
+	$res = $aseco->db->query($query);
+	if ($res->num_rows == 1) {
+		$row = $res->fetch_object();
 		$karma = $row->karma;
 		$total = $row->total;
-		mysql_free_result($res);
+		if ($res) $res->free();
 
 		// get vote counts & percentages
 		if ($total > 0) {
@@ -216,16 +217,16 @@ function getKarmaValues($cid) {
 			           FROM rs_karma karma
 			           WHERE challengeid=' . $cid . '
 			           GROUP BY challengeid';
-			$res2 = mysql_query($query2);
-			if (mysql_num_rows($res2) == 1) {
-				$row2 = mysql_fetch_object($res2);
+			$res2 = $aseco->db->query($query2);
+			if ($res2->num_rows == 1) {
+				$row2 = $res2->fetch_object();
 				$plus = $row2->plus;
 				$minus = $row2->minus;
 			} else {
 				$plus = 0;
 				$minus = 0;
 			}
-			mysql_free_result($res2);
+			if ($res2) $res2->free();
 			return array('Karma' => $karma, 'Total' => $total,
 			             'Good' => $plus, 'Bad' => $minus,
 			             'GoodPct' => $plus / $total * 100,
@@ -267,9 +268,9 @@ function getKarma($cid, $login) {
 		if ($pid != 0) {
 			$query3 = 'SELECT Score FROM rs_karma
 			           WHERE PlayerId=' . $pid . ' AND ChallengeId=' . $cid;
-			$res3 = mysql_query($query3);
-			if (mysql_num_rows($res3) > 0) {
-				$row3 = mysql_fetch_object($res3);
+			$res3 = $aseco->db->query($query3);
+			if ($res3->num_rows > 0) {
+				$row3 = $res3->fetch_object();
 				if ($row3->Score == 1) {
 					$vote = '++';
 				} else {  // -1
@@ -279,7 +280,7 @@ function getKarma($cid, $login) {
 				$vote = 'none';
 			}
 			$karma .= formatText($rasp->messages['KARMA_VOTE'][0], $vote);
-			mysql_free_result($res3);
+			if ($res3) $res3->free();
 		}
 	}
 	return $karma;
@@ -298,13 +299,13 @@ function remind_onfinish($aseco, $finish_item) {
 	// check whether player already voted
 	$query = 'SELECT Id, Score FROM rs_karma
 	          WHERE PlayerId=' . $finish_item->player->id . ' AND ChallengeId=' . $aseco->server->challenge->id;
-	$res = mysql_query($query);
-	if (mysql_num_rows($res) == 0) {
+	$res = $aseco->db->query($query);
+	if ($res->num_rows == 0) {
 		// show reminder message
 		$message = $rasp->messages['KARMA_REMIND'][0];
 		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $finish_item->player->login);
 	}
-	mysql_free_result($res);
+	if ($res) $res->free();
 }  // remind_onfinish
 
 // called @ onEndRace
@@ -321,13 +322,13 @@ function remind_onendrace($aseco, $data) {
 			// check whether player already voted
 			$query = 'SELECT Id, Score FROM rs_karma
 			          WHERE PlayerId=' . $player->id . ' AND ChallengeId=' . $aseco->server->challenge->id;
-			$res = mysql_query($query);
-			if (mysql_num_rows($res) == 0) {
+			$res = $aseco->db->query($query);
+			if ($res->num_rows == 0) {
 				// show reminder message
 				$message = $rasp->messages['KARMA_REMIND'][0];
 				$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $player->login);
 			}
-			mysql_free_result($res);
+			if ($res) $res->free();
 		}
 	}
 }  // remind_onendrace

@@ -1500,9 +1500,9 @@ function chat_history($aseco, $command) {
 			// get track name from UID
 			$query = 'SELECT Name FROM challenges
 			          WHERE Uid=' . quotedString($jb_buffer[$j]);
-			$res = mysql_query($query);
-			$row = mysql_fetch_object($res);
-			mysql_free_result($res);
+			$res = $aseco->db->query($query);
+			$row = $res ? $res->fetch_object() : null;
+			if ($res) $res->free();
 
 			$message .= '{#highlite}' . $i . '{#emotic}.[{#highlite}' . stripColors($row->Name) . '{#emotic}], ';
 		}

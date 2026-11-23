@@ -47,9 +47,9 @@ function chat_stats($aseco, $command) {
 		// obtain last online timestamp
 		$query = 'SELECT UpdatedAt FROM players
 		          WHERE login=' . quotedString($target->login);
-		$result = mysql_query($query);
-		$laston = mysql_fetch_row($result);
-		mysql_free_result($result);
+		$result = $aseco->db->query($query);
+		$laston = $result ? $result->fetch_row() : null;
+		if ($result) $result->free();
 
 		$records = 0;
 		if ($list = get_recs($target->id)) {  // from chat.records2.php
@@ -126,9 +126,9 @@ function chat_stats($aseco, $command) {
 		// obtain last online timestamp
 		$query = 'SELECT UpdatedAt FROM players
 		          WHERE login=' . quotedString($target->login);
-		$result = mysql_query($query);
-		$laston = mysql_fetch_row($result);
-		mysql_free_result($result);
+		$result = $aseco->db->query($query);
+		$laston = $result ? $result->fetch_row() : null;
+		if ($result) $result->free();
 
 		$records = 0;
 		if ($list = get_recs($target->id)) {  // from chat.records2.php

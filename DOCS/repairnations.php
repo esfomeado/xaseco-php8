@@ -5,25 +5,27 @@
 // Repair truncation issues with the Nation field in the XASECO players table
 // Created Apr 2008 by Xymph <tm@gamers.org>
 
-	if (!mysql_connect('localhost','YOUR_MYSQL_LOGIN','YOUR_MYSQL_PASSWORD')) {
+	mysqli_report(MYSQLI_REPORT_OFF);
+	$db = new mysqli('localhost','YOUR_MYSQL_LOGIN','YOUR_MYSQL_PASSWORD');
+	if ($db->connect_errno) {
 		echo "could not connect\n";
 		exit;
 	}
-	if (!mysql_select_db('aseco')) {
+	if (!$db->select_db('aseco')) {
 		echo "could not select\n";
 		exit;
 	}
 
 	// get all unique Nation strings
 	$query = 'SELECT Nation FROM players';
-	$resply = mysql_query($query);
+	$resply = $db->query($query);
 
 	$nations = array();
-	if (mysql_num_rows($resply) > 0) {
-		while ($rowply = mysql_fetch_object($resply)) {
+	if ($resply->num_rows > 0) {
+		while ($rowply = $resply->fetch_object()) {
 			$nations[] = $rowply->Nation;
 		}
-		mysql_free_result($resply);
+		if ($resply) $resply->free();
 	} else {
 		echo "no players!\n";
 	}
@@ -48,7 +50,7 @@
 		$query = 'UPDATE players
 		          SET Nation="' . $newnation . '"
 		          WHERE Nation="' . $oldnation . '"';
-		$result = mysql_query($query);
+		$result = $db->query($query);
 		$count++;
 	}
 	echo 'Updated nations: ' . $count . "\n";

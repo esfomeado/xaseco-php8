@@ -27,20 +27,20 @@ function chat_nextrank($aseco, $command) {
 		// find current player's avg
 		$query = 'SELECT avg FROM rs_rank
 		          WHERE playerID=' . $command['author']->id;
-		$res = mysql_query($query);
+		$res = $aseco->db->query($query);
 
-		if (mysql_num_rows($res) > 0) {
-			$row = mysql_fetch_array($res);
+		if ($res->num_rows > 0) {
+			$row = $res->fetch_array();
 			$avg = $row['avg'];
 
 			// find players with better avgs
 			$query = 'SELECT playerid,avg FROM rs_rank
 			          WHERE avg<' . $avg . ' ORDER BY avg';
-			$res2 = mysql_query($query);
+			$res2 = $aseco->db->query($query);
 
-			if (mysql_num_rows($res2) > 0) {
+			if ($res2->num_rows > 0) {
 				// find last player before current one
-				while ($row2 = mysql_fetch_array($res2)) {
+				while ($row2 = $res2->fetch_array()) {
 					$pid = $row2['playerid'];
 					$avg2 = $row2['avg'];
 				}
@@ -48,8 +48,8 @@ function chat_nextrank($aseco, $command) {
 				// obtain next player's info
 				$query = 'SELECT login,nickname FROM players
 				          WHERE id=' . $pid;
-				$res3 = mysql_query($query);
-				$row3 = mysql_fetch_array($res3);
+				$res3 = $aseco->db->query($query);
+				$row3 = $res3 ? $res3->fetch_array() : null;
 
 				$rank = $rasp->getRank($row3['login']);
 				$rank = preg_replace('|^(\d+)/|', '{#rank}$1{#record}/{#highlite}', $rank);
@@ -64,17 +64,17 @@ function chat_nextrank($aseco, $command) {
 					$message .= formatText($rasp->messages['NEXTRANK_RP'][0], ceil($diff));
 				}
 				$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
-				mysql_free_result($res3);
+				if ($res3) $res3->free();
 			} else {
 				$message = $rasp->messages['TOPRANK'][0];
 				$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 			}
-			mysql_free_result($res2);
+			if ($res2) $res2->free();
 		} else {
 			$message = formatText($rasp->messages['RANK_NONE'][0], $minrank);
 			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }  // chat_nextrank
 ?>

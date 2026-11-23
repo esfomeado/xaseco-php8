@@ -296,9 +296,9 @@ function getChallengesByKarma($player, $karmaval) {
 		        HAVING karma ' . ($karmaval < 0 ? "<= $karmaval" : ">= $karmaval") . '
 		        ORDER BY karma ' . $order;
 	}
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) == 0) {
-		mysql_free_result($result);
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows == 0) {
+		if ($result) $result->free();
 		return;
 	}
 
@@ -313,7 +313,7 @@ function getChallengesByKarma($player, $karmaval) {
 		$player->msgs = array();
 		$player->msgs[0] = 1;
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -368,7 +368,7 @@ function getChallengesByKarma($player, $karmaval) {
 		else
 			$player->msgs[0] = array(1, $head, array(1.27+$extra, 0.12, 0.15, 0.6+$extra, 0.4), array('Icons128x128_1', 'NewTrack', 0.02));
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -431,7 +431,7 @@ function getChallengesByKarma($player, $karmaval) {
 			$player->msgs[] = $msg;
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesByKarma
 
 function getChallengesNoFinish($player) {
@@ -442,13 +442,13 @@ function getChallengesNoFinish($player) {
 	// get list of finished tracks
 	$sql = 'SELECT DISTINCT challengeID FROM rs_times
 	        WHERE playerID=' . $player->id . ' ORDER BY challengeID';
-	$result = mysql_query($sql);
+	$result = $aseco->db->query($sql);
 	$finished = array();
-	if (mysql_num_rows($result) > 0) {
-		while ($dbrow = mysql_fetch_array($result))
+	if ($result->num_rows > 0) {
+		while ($dbrow = $result->fetch_array())
 			$finished[] = $dbrow[0];
 	}
-	mysql_free_result($result);
+	if ($result) $result->free();
 
 	// get list of unfinished tracks
 	// simpler but less efficient query:
@@ -458,9 +458,9 @@ function getChallengesNoFinish($player) {
 	$sql = 'SELECT uid FROM challenges';
 	if (!empty($finished))
 		$sql .= ' WHERE id NOT IN (' . implode(',', $finished) . ')';
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) == 0) {
-		mysql_free_result($result);
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows == 0) {
+		if ($result) $result->free();
 		return;
 	}
 
@@ -475,7 +475,7 @@ function getChallengesNoFinish($player) {
 		$player->msgs = array();
 		$player->msgs[0] = 1;
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -529,7 +529,7 @@ function getChallengesNoFinish($player) {
 		else
 			$player->msgs[0] = array(1, $head, array(1.12+$extra, 0.12, 0.6+$extra, 0.4), array('Icons128x128_1', 'NewTrack', 0.02));
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -589,7 +589,7 @@ function getChallengesNoFinish($player) {
 			$player->msgs[] = $msg;
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesNoFinish
 
 function getChallengesNoRank($player) {
@@ -600,13 +600,13 @@ function getChallengesNoRank($player) {
 	// get list of finished tracks
 	$sql = 'SELECT DISTINCT challengeID FROM rs_times
 	        WHERE playerID=' . $player->id . ' ORDER BY challengeID';
-	$result = mysql_query($sql);
+	$result = $aseco->db->query($sql);
 	$finished = array();
-	if (mysql_num_rows($result) > 0) {
-		while ($dbrow = mysql_fetch_array($result))
+	if ($result->num_rows > 0) {
+		while ($dbrow = $result->fetch_array())
 			$finished[] = $dbrow[0];
 	}
-	mysql_free_result($result);
+	if ($result) $result->free();
 
 	// get list of finished tracks
 	// simpler but less efficient query:
@@ -618,9 +618,9 @@ function getChallengesNoRank($player) {
 		$sql .= 'IN (' . implode(',', $finished) . ')';
 	else
 		$sql .= '= 0';  // empty list
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) == 0) {
-		mysql_free_result($result);
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows == 0) {
+		if ($result) $result->free();
 		return;
 	}
 
@@ -628,17 +628,17 @@ function getChallengesNoRank($player) {
 	$unranked = array();
 	$i = 0;
 	// check if player not in top $maxrecs on each track
-	while ($dbrow = mysql_fetch_array($result)) {
+	while ($dbrow = $result->fetch_array()) {
 		// more efficient but unsupported query: :(
 		// $sql2 = 'SELECT id FROM players WHERE (id=' . $player->id . ') AND (id NOT IN
 		//          (SELECT playerid FROM records WHERE challengeid=' . $dbrow[0] . ' ORDER by score, date LIMIT ' . $maxrecs . '))';
 		$sql2 = 'SELECT playerid FROM records
 		         WHERE challengeid=' . $dbrow[0] . '
 		         ORDER by score ' . $order . ', date ASC LIMIT ' . $maxrecs;
-		$result2 = mysql_query($sql2);
+		$result2 = $aseco->db->query($sql2);
 		$found = false;
-		if (mysql_num_rows($result2) > 0) {
-			while ($plrow = mysql_fetch_array($result2)) {
+		if ($result2->num_rows > 0) {
+			while ($plrow = $result2->fetch_array()) {
 				if ($player->id == $plrow[0]) {
 					$found = true;
 					break;
@@ -648,10 +648,10 @@ function getChallengesNoRank($player) {
 		if (!$found) {
 			$unranked[$i++] = $dbrow[1];
 		}
-		mysql_free_result($result2);
+		if ($result2) $result2->free();
 	}
 	if (empty($unranked)) {
-		mysql_free_result($result);
+		if ($result) $result->free();
 		return;
 	}
 
@@ -780,7 +780,7 @@ function getChallengesNoRank($player) {
 			$player->msgs[] = $msg;
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesNoRank
 
 function getChallengesNoGold($player) {
@@ -796,9 +796,9 @@ function getChallengesNoGold($player) {
 		        WHERE (playerID=' . $player->id . ' AND t1.challengeID=c.id AND
 		               score=(SELECT MIN(t2.score) FROM rs_times t2
 		                      WHERE playerID=' . $player->id . ' AND t1.challengeID=t2.challengeID))';
-		$result = mysql_query($sql);
-		if (mysql_num_rows($result) == 0) {
-			mysql_free_result($result);
+		$result = $aseco->db->query($sql);
+		if ($result->num_rows == 0) {
+			if ($result) $result->free();
 			return;
 		}
 
@@ -813,7 +813,7 @@ function getChallengesNoGold($player) {
 			$player->msgs = array();
 			$player->msgs[0] = 1;
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -875,7 +875,7 @@ function getChallengesNoGold($player) {
 			else
 				$player->msgs[0] = array(1, $head, array(1.27+$extra, 0.12, 0.6+$extra, 0.4, 0.15), array('Icons128x128_1', 'NewTrack', 0.02));
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -952,9 +952,9 @@ function getChallengesNoGold($player) {
 		        WHERE (playerID=' . $player->id . ' AND t1.challengeID=c.id AND
 		               score=(SELECT MAX(t2.score) FROM rs_times t2
 		                      WHERE playerID=' . $player->id . ' AND t1.challengeID=t2.challengeID))';
-		$result = mysql_query($sql);
-		if (mysql_num_rows($result) == 0) {
-			mysql_free_result($result);
+		$result = $aseco->db->query($sql);
+		if ($result->num_rows == 0) {
+			if ($result) $result->free();
 			return;
 		}
 
@@ -974,7 +974,7 @@ function getChallengesNoGold($player) {
 			$extra = ($aseco->settings['lists_colortracks'] ? 0.2 : 0);
 			$player->msgs[0] = array(1, $head, array(1.42+$extra, 0.12, 0.6+$extra, 0.4, 0.15, 0.15), array('Icons128x128_1', 'NewTrack', 0.02));
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -1035,7 +1035,7 @@ function getChallengesNoGold($player) {
 		}
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesNoGold
 
 function getChallengesNoAuthor($player) {
@@ -1051,9 +1051,9 @@ function getChallengesNoAuthor($player) {
 		        WHERE (playerID=' . $player->id . ' AND t1.challengeID=c.id AND
 		               score=(SELECT MIN(t2.score) FROM rs_times t2
 		                      WHERE playerID=' . $player->id . ' AND t1.challengeID=t2.challengeID))';
-		$result = mysql_query($sql);
-		if (mysql_num_rows($result) == 0) {
-			mysql_free_result($result);
+		$result = $aseco->db->query($sql);
+		if ($result->num_rows == 0) {
+			if ($result) $result->free();
 			return;
 		}
 
@@ -1068,7 +1068,7 @@ function getChallengesNoAuthor($player) {
 			$player->msgs = array();
 			$player->msgs[0] = 1;
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -1130,7 +1130,7 @@ function getChallengesNoAuthor($player) {
 			else
 				$player->msgs[0] = array(1, $head, array(1.27+$extra, 0.12, 0.6+$extra, 0.4, 0.15), array('Icons128x128_1', 'NewTrack', 0.02));
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -1207,9 +1207,9 @@ function getChallengesNoAuthor($player) {
 		        WHERE (playerID=' . $player->id . ' AND t1.challengeID=c.id AND
 		               score=(SELECT MAX(t2.score) FROM rs_times t2
 		                      WHERE playerID=' . $player->id . ' AND t1.challengeID=t2.challengeID))';
-		$result = mysql_query($sql);
-		if (mysql_num_rows($result) == 0) {
-			mysql_free_result($result);
+		$result = $aseco->db->query($sql);
+		if ($result->num_rows == 0) {
+			if ($result) $result->free();
 			return;
 		}
 
@@ -1229,7 +1229,7 @@ function getChallengesNoAuthor($player) {
 			$extra = ($aseco->settings['lists_colortracks'] ? 0.2 : 0);
 			$player->msgs[0] = array(1, $head, array(1.42+$extra, 0.12, 0.6+$extra, 0.4, 0.15, 0.15), array('Icons128x128_1', 'NewTrack', 0.02));
 
-			while ($dbrow = mysql_fetch_array($result)) {
+			while ($dbrow = $result->fetch_array()) {
 				// does the uid exist in the current server track list?
 				if (array_key_exists($dbrow[0], $newlist)) {
 					$row = $newlist[$dbrow[0]];
@@ -1290,7 +1290,7 @@ function getChallengesNoAuthor($player) {
 		}
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesNoAuthor
 
 // calls function get_recs() from chat.records2.php
@@ -1305,9 +1305,9 @@ function getChallengesNoRecent($player) {
 	               date=(SELECT MAX(t2.date) FROM rs_times t2
 	                     WHERE playerID=' . $player->id . ' AND t1.challengeID=t2.challengeID))
 	        ORDER BY t1.date';
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) == 0) {
-		mysql_free_result($result);
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows == 0) {
+		if ($result) $result->free();
 		return;
 	}
 
@@ -1324,7 +1324,7 @@ function getChallengesNoRecent($player) {
 		$player->msgs = array();
 		$player->msgs[0] = 1;
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -1382,7 +1382,7 @@ function getChallengesNoRecent($player) {
 		else
 			$player->msgs[0] = array(1, $head, array(1.43+$extra, 0.12, 0.1, 0.6+$extra, 0.4, 0.21), array('Icons128x128_1', 'NewTrack', 0.02));
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -1448,7 +1448,7 @@ function getChallengesNoRecent($player) {
 			$player->msgs[] = $msg;
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesNoRecent
 
 function getChallengesByLength($player, $order) {
@@ -1595,9 +1595,9 @@ function getChallengesByAdd($player, $order, $count) {
 	// get list of tracks in reverse order of addition
 	$sql = 'SELECT uid FROM challenges
 	        ORDER BY id ' . ($order ? 'DESC' : 'ASC');
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) == 0) {
-		mysql_free_result($result);
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows == 0) {
+		if ($result) $result->free();
 		return;
 	}
 
@@ -1613,7 +1613,7 @@ function getChallengesByAdd($player, $order, $count) {
 		$player->msgs = array();
 		$player->msgs[0] = 1;
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -1669,7 +1669,7 @@ function getChallengesByAdd($player, $order, $count) {
 		else
 			$player->msgs[0] = array(1, $head, array(1.12+$extra, 0.12, 0.6+$extra, 0.4), array('Icons128x128_1', 'NewTrack', 0.02));
 
-		while ($dbrow = mysql_fetch_array($result)) {
+		while ($dbrow = $result->fetch_array()) {
 			// does the uid exist in the current server track list?
 			if (array_key_exists($dbrow[0], $newlist)) {
 				$row = $newlist[$dbrow[0]];
@@ -1731,7 +1731,7 @@ function getChallengesByAdd($player, $order, $count) {
 			$player->msgs[] = $msg;
 	}
 
-	mysql_free_result($result);
+	if ($result) $result->free();
 }  // getChallengesByAdd
 
 function getChallengesNoVote($player) {
@@ -1748,12 +1748,12 @@ function getChallengesNoVote($player) {
 	// get list of voted tracks and remove those
 	$sql = 'SELECT uid FROM challenges c, rs_karma k
 	        WHERE c.id=k.challengeID AND k.playerID=' . $player->id;
-	$result = mysql_query($sql);
-	if (mysql_num_rows($result) > 0) {
-		while ($dbrow = mysql_fetch_array($result))
+	$result = $aseco->db->query($sql);
+	if ($result->num_rows > 0) {
+		while ($dbrow = $result->fetch_array())
 			unset($newlist[$dbrow[0]]);
 	}
-	mysql_free_result($result);
+	if ($result) $result->free();
 
 	if ($aseco->server->getGame() == 'TMN') {
 		$head = 'Tracks You Didn\'t Vote For:' . LF . 'Id        Rec   Name' . LF;

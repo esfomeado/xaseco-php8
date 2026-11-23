@@ -216,8 +216,9 @@ function formatText($text) {
  * Make String for SQL use that single quoted & got special chars replaced.
  */
 function quotedString($input) {
+	global $aseco;
 
-	return "'" . mysql_real_escape_string($input) . "'";
+	return "'" . $aseco->db->real_escape_string($input) . "'";
 }  // quotedString
 
 /**

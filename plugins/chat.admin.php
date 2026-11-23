@@ -1630,11 +1630,11 @@ function chat_admin($aseco, $command) {
 			          WHERE login LIKE ' . quotedString('%' . $arglist[1] . '%') .
 			           ' OR nickname LIKE ' . quotedString('%' . $arglist[1] . '%') .
 			         ' LIMIT 5000';  // prevent possible memory overrun
-			$result = mysql_query($query);
+			$result = $aseco->db->query($query);
 
 			$playerlist = array();
-			if (mysql_num_rows($result) > 0) {
-				while ($row = mysql_fetch_row($result)) {
+			if ($result->num_rows > 0) {
+				while ($row = $result->fetch_row()) {
 					// skip any LAN logins
 					if (!isLANLogin($row[0]))
 						$playerlist[$row[0]] = array('login' => $row[0],
@@ -1642,7 +1642,7 @@ function chat_admin($aseco, $command) {
 						                             'spec' => false);
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 
 		if (!empty($playerlist)) {
@@ -3792,9 +3792,9 @@ function chat_admin($aseco, $command) {
 				if ($track > 0) {
 					// delete the records and rs_times
 					$query = 'DELETE FROM records WHERE ChallengeID=' . $track;
-					mysql_query($query);
+					$aseco->db->query($query);
 					$query = 'DELETE FROM rs_times WHERE challengeID=' . $track;
-					mysql_query($query);
+					$aseco->db->query($query);
 
 					// log console message
 					$aseco->console('{1} [{2}] pruned records/times for track {3} !', $logtitle, $login, stripColors($name, false));

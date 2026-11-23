@@ -22,17 +22,17 @@ function chat_server($aseco, $command) {
 
 	// collect players/nations stats
 	$query = 'SELECT COUNT(Id), COUNT(DISTINCT Nation), SUM(TimePlayed) FROM players';
-	$res = mysql_query($query);
-	if (mysql_num_rows($res) > 0) {
-		$row = mysql_fetch_row($res);
+	$res = $aseco->db->query($query);
+	if ($res->num_rows > 0) {
+		$row = $res->fetch_row();
 		$players = $row[0];
 		$nations = $row[1];
 		$totaltime = $row[2];
-		mysql_free_result($res);
+		if ($res) $res->free();
 		$playdays = floor($totaltime / (24 * 3600));
 		$playtime = $totaltime - ($playdays * 24 * 3600);
 	} else {
-		mysql_free_result($res);
+		if ($res) $res->free();
 		trigger_error('No players/nations stats found!', E_USER_ERROR);
 	}
 
@@ -362,18 +362,18 @@ function chat_nations($aseco, $command) {
 		$top = 4;
 
 	$query = 'SELECT Nation, COUNT(Nation) AS count FROM players GROUP BY Nation ORDER BY count DESC LIMIT ' . $top;
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 
 	// collect and sort nations
-	if (mysql_num_rows($res) > 0) {
+	if ($res->num_rows > 0) {
 		$nations = array();
-		while ($row = mysql_fetch_row($res)) {
+		while ($row = $res->fetch_row()) {
 			$nations[$row[0]] = $row[1];
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	} else {
 		trigger_error('No players/nations found!', E_USER_WARNING);
-		mysql_free_result($res);
+		if ($res) $res->free();
 		return;
 	}
 	arsort($nations);

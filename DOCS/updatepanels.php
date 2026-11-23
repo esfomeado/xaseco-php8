@@ -26,22 +26,24 @@
 		exit;
 	}
 
-	if (!mysql_connect('localhost','YOUR_MYSQL_LOGIN','YOUR_MYSQL_PASSWORD')) {
+	mysqli_report(MYSQLI_REPORT_OFF);
+	$db = new mysqli('localhost','YOUR_MYSQL_LOGIN','YOUR_MYSQL_PASSWORD');
+	if ($db->connect_errno) {
 		echo "could not connect\n";
 		exit;
 	}
-	if (!mysql_select_db('aseco')) {
+	if (!$db->select_db('aseco')) {
 		echo "could not select\n";
 		exit;
 	}
 
 	$query = 'SELECT PlayerID,Panels FROM players_extra ORDER BY PlayerID';
-	$resply = mysql_query($query);
+	$resply = $db->query($query);
 
-	if (mysql_num_rows($resply) > 0) {
-		echo 'Updating players_extra entries: ' . mysql_num_rows($resply) . " ...\n";
+	if ($resply->num_rows > 0) {
+		echo 'Updating players_extra entries: ' . $resply->num_rows . " ...\n";
 
-		while ($rowply = mysql_fetch_object($resply)) {
+		while ($rowply = $resply->fetch_object()) {
 			$panels = explode('/', $rowply->Panels);
 			switch ($argv[1]) {
 			case 'admin':
@@ -59,17 +61,17 @@
 			}
 
 			$query = "UPDATE players_extra SET Panels = '" . implode('/', $panels) . "' WHERE PlayerID = " . $rowply->PlayerID;
-			$result = mysql_query($query);
-			if (mysql_affected_rows() == -1) {
-				mysql_free_result($resply);
+			$result = $db->query($query);
+			if ($db->affected_rows == -1) {
+				if ($resply) $resply->free();
 				echo "couldn't update panels for player ID " . $rowply->PlayerID . ":\n";
-				echo mysql_error() . "\n";
+				echo $db->error . "\n";
 				exit;
 			}
 		}
 		echo "Done\n";
 
-		mysql_free_result($resply);
+		if ($resply) $resply->free();
 	} else {
 		echo "no players_extra!\n";
 	}
