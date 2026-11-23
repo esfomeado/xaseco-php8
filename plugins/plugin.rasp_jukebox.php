@@ -569,7 +569,7 @@ function chat_jukebox($aseco, $command) {
 			}
 
 			// find track by given #
-			$jid = ltrim($param, '0');
+			$jid = (int)ltrim($param, '0');
 			$jid--;
 			if (array_key_exists($jid, $player->tracklist)) {
 				$uid = $player->tracklist[$jid]['uid'];

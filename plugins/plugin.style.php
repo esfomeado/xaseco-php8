@@ -130,7 +130,7 @@ function chat_style($aseco, $command) {
 	elseif ($command['params'] != '') {
 		$style = $command['params'];
 		if (is_numeric($style) && $style > 0) {
-			$sid = ltrim($style, '0');
+			$sid = (int)ltrim($style, '0');
 			$sid--;
 			if (array_key_exists($sid, $player->tracklist) &&
 			    isset($player->tracklist[$sid]['style'])) {

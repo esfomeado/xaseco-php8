@@ -281,7 +281,7 @@ function chat_donpanel($aseco, $command) {
 	elseif ($command['params'] != '') {
 		$panel = $command['params'];
 		if (is_numeric($panel) && $panel > 0) {
-			$pid = ltrim($panel, '0');
+			$pid = (int)ltrim($panel, '0');
 			$pid--;
 			if (array_key_exists($pid, $player->tracklist) &&
 			    isset($player->tracklist[$pid]['panel'])) {
@@ -436,7 +436,7 @@ function chat_recpanel($aseco, $command) {
 	elseif ($command['params'] != '') {
 		$panel = $command['params'];
 		if (is_numeric($panel) && $panel > 0) {
-			$pid = ltrim($panel, '0');
+			$pid = (int)ltrim($panel, '0');
 			$pid--;
 			if (array_key_exists($pid, $player->tracklist) &&
 			    isset($player->tracklist[$pid]['panel'])) {
@@ -629,7 +629,7 @@ function chat_votepanel($aseco, $command) {
 	elseif ($command['params'] != '') {
 		$panel = $command['params'];
 		if (is_numeric($panel) && $panel > 0) {
-			$pid = ltrim($panel, '0');
+			$pid = (int)ltrim($panel, '0');
 			$pid--;
 			if (array_key_exists($pid, $player->tracklist) &&
 			    isset($player->tracklist[$pid]['panel'])) {
@@ -769,7 +769,7 @@ function admin_panel($aseco, $command) {
 	elseif ($command['params'] != '') {
 		$panel = $command['params'];
 		if (is_numeric($panel) && $panel > 0) {
-			$pid = ltrim($panel, '0');
+			$pid = (int)ltrim($panel, '0');
 			$pid--;
 			if (array_key_exists($pid, $player->tracklist) &&
 			    isset($player->tracklist[$pid]['panel'])) {

@@ -1390,7 +1390,7 @@ function chat_admin($aseco, $command) {
 				$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 				return false;
 			}
-			$pid = ltrim($param, '0');
+			$pid = (int)ltrim($param, '0');
 			$pid--;
 			// find player by given #
 			if (array_key_exists($pid, $admin->playerlist)) {
@@ -2662,7 +2662,7 @@ function chat_admin($aseco, $command) {
 				return;
 			}
 			// find track by given #
-			$tid = ltrim($param, '0');
+			$tid = (int)ltrim($param, '0');
 			$tid--;
 			if (array_key_exists($tid, $admin->tracklist)) {
 				$name = stripColors($admin->tracklist[$tid]['name']);
@@ -3742,7 +3742,7 @@ function chat_admin($aseco, $command) {
 		// verify parameter
 		$param = $command['params'][1];
 		if (is_numeric($param) && $param > 0 && $param <= $aseco->server->records->count()) {
-			$param = ltrim($param, '0');
+			$param = (int)ltrim($param, '0');
 			$param--;
 			// get record info
 			$record = $aseco->server->records->getRecord($param);
@@ -3782,7 +3782,7 @@ function chat_admin($aseco, $command) {
 				return;
 			}
 			// find track by given #
-			$jid = ltrim($param, '0');
+			$jid = (int)ltrim($param, '0');
 			$jid--;
 			if (array_key_exists($jid, $admin->tracklist)) {
 				$uid = $admin->tracklist[$jid]['uid'];

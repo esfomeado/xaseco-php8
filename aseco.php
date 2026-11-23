@@ -2421,7 +2421,7 @@ disabled */
 				$this->client->query('ChatSendServerMessageToLogin', $this->formatColors($message), $player->login);
 				return false;
 			}
-			$pid = ltrim($param, '0');
+			$pid = (int)ltrim($param, '0');
 			$pid--;
 			// find player by given #
 			if (array_key_exists($pid, $player->playerlist)) {

@@ -161,7 +161,7 @@ function chat_karma($aseco, $command) {
 			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $login);
 			return;
 		}
-		$jid = ltrim($param, '0');
+		$jid = (int)ltrim($param, '0');
 		$jid--;
 		// find track by given #
 		if (array_key_exists($jid, $player->tracklist)) {
