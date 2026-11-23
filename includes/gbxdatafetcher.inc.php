@@ -1269,25 +1269,25 @@ class GBXPackFetcher extends GBXBaseFetcher
 			}
 
 			// compute everything manually
-			$a = substr($hi, 0, -5);
-			$b = substr($hi, -5);
+			$a = (float)substr($hi, 0, -5);
+			$b = (float)substr($hi, -5);
 			// hope that float precision is enough
 			$ac = $a * 42949;
 			$bd = $b * 67296;
 			$adbc = $a * 67296 + $b * 42949;
-			$r4 = substr($bd, -5) + substr($lo, -5);
-			$r3 = substr($bd, 0, -5) + substr($adbc, -5) + substr($lo, 0, -5);
-			$r2 = substr($adbc, 0, -5) + substr($ac, -5);
-			$r1 = substr($ac, 0, -5);
+			$r4 = (float)substr($bd, -5) + (float)substr($lo, -5);
+			$r3 = (float)substr($bd, 0, -5) + (float)substr($adbc, -5) + (float)substr($lo, 0, -5);
+			$r2 = (float)substr($adbc, 0, -5) + (float)substr($ac, -5);
+			$r1 = (float)substr($ac, 0, -5);
 			while ($r4 >= 100000) { $r4 -= 100000; $r3++; }
 			while ($r3 >= 100000) { $r3 -= 100000; $r2++; }
 			while ($r2 >= 100000) { $r2 -= 100000; $r1++; }
 			$date = ltrim(sprintf('%d%05d%05d%05d', $r1, $r2, $r3, $r4), '0');
 
 			// convert to Unix timestamp in usec
-			$r3 = substr($date, -6)     - substr($EPOCHDIFF, -6);
-			$r2 = substr($date, -12, 6) - substr($EPOCHDIFF, -12, 6);
-			$r1 = substr($date, -18, 6) - substr($EPOCHDIFF, -18, 6);
+			$r3 = (float)substr($date, -6)     - (float)substr($EPOCHDIFF, -6);
+			$r2 = (float)substr($date, -12, 6) - (float)substr($EPOCHDIFF, -12, 6);
+			$r1 = (float)substr($date, -18, 6) - (float)substr($EPOCHDIFF, -18, 6);
 			if ($r3 < 0) { $r3 += 1000000; $r2--; }
 			if ($r2 < 0) { $r2 += 1000000; $r1--; }
 			$stamp = substr(sprintf('%d%06d%06d', $r1, $r2, $r3), 0, -1);
