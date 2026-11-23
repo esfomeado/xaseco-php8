@@ -184,7 +184,7 @@ function ldb_connect($aseco) {
 	$result = $aseco->db->query_or_die('DESC players TimePlayed');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
-	if ($row[1] != 'int(10) unsigned') {
+	if (!XasecoDB::same_type($row[1], 'int(10) unsigned')) {
 		$aseco->console("[LocalDB] Alter 'players' column 'TimePlayed'...");
 		$aseco->db->query("ALTER TABLE players MODIFY TimePlayed int(10) unsigned NOT NULL default 0");
 	}
@@ -193,14 +193,14 @@ function ldb_connect($aseco) {
 	$result = $aseco->db->query_or_die('DESC records Id');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
-	if ($row[1] != 'int(11)') {
+	if (!XasecoDB::same_type($row[1], 'int(11)')) {
 		$aseco->console("[LocalDB] Alter 'records' column 'Id'...");
 		$aseco->db->query('ALTER TABLE records MODIFY Id int(11) auto_increment');
 	}
 	$result = $aseco->db->query_or_die('DESC records Score');
 	$row = $result ? $result->fetch_row() : null;
 	if ($result) $result->free();
-	if ($row[1] != 'int(11)') {
+	if (!XasecoDB::same_type($row[1], 'int(11)')) {
 		$aseco->console("[LocalDB] Alter 'records' column 'Score'...");
 		$aseco->db->query("ALTER TABLE records MODIFY Score int(11) NOT NULL default 0");
 	}
@@ -327,6 +327,15 @@ class XasecoDB extends mysqli {
 			}
 		}
 		return $result;
+	}
+
+	// column type check that ignores integer display widths: MySQL 8.0.19+
+	// reports 'int' / 'int unsigned' where MariaDB and MySQL 5 say 'int(11)'
+	public static function same_type($actual, $wanted) {
+		$strip = function ($type) {
+			return preg_replace('/^((?:tiny|small|medium|big)?int)\(\d+\)/', '$1', strtolower($type));
+		};
+		return $strip($actual) == $strip($wanted);
 	}
 
 	// for the start-up structure checks: no point in running without them

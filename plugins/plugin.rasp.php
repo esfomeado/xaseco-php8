@@ -131,14 +131,14 @@ class Rasp {
 		$res = $this->aseco->db->query_or_die('DESC rs_times ID');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
-		if ($row[1] != 'int(11)') {
+		if (!XasecoDB::same_type($row[1], 'int(11)')) {
 			$this->aseco->console("[RASP] Alter 'rs_times' column 'ID'...");
 			$this->aseco->db->query('ALTER TABLE rs_times MODIFY ID int(11) auto_increment');
 		}
 		$res = $this->aseco->db->query_or_die('DESC rs_times score');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
-		if ($row[1] != 'int(11)') {
+		if (!XasecoDB::same_type($row[1], 'int(11)')) {
 			$this->aseco->console("[RASP] Alter 'rs_times' column 'score'...");
 			$this->aseco->db->query('ALTER TABLE rs_times MODIFY score int(11) NOT NULL default 0');
 		}
@@ -165,7 +165,7 @@ class Rasp {
 		$res = $this->aseco->db->query_or_die('DESC rs_karma Score');
 		$row = $res ? $res->fetch_row() : null;
 		if ($res) $res->free();
-		if ($row[1] != 'tinyint(4)') {
+		if (!XasecoDB::same_type($row[1], 'tinyint(4)')) {
 			$this->aseco->console("[RASP] Alter 'rs_karma' column 'score'...");
 			$this->aseco->db->query('ALTER TABLE rs_karma MODIFY Score tinyint(4) NOT NULL default 0');
 		}
