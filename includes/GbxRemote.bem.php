@@ -187,7 +187,7 @@ class IXR_Message {
 	protected $_param;
 	protected $_value;
 	protected $_currentTag;
-	protected $_currentTagContents;
+	protected $_currentTagContents = '';
 	// The XML parser
 	protected $_parser;
 
