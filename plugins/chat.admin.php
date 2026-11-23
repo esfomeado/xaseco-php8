@@ -5370,7 +5370,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin warn command
 	if ($answer[2] >= 2201 && $answer[2] <= 2400) {
-		$target = $player->playerlist[$answer[2]-2201]['login'];
+		$target = $player->playerlist[$answer[2]-2201]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin warn {2}"',
@@ -5385,7 +5385,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin ignore command
 	elseif ($answer[2] >= 2401 && $answer[2] <= 2600) {
-		$target = $player->playerlist[$answer[2]-2401]['login'];
+		$target = $player->playerlist[$answer[2]-2401]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin ignore {2}"',
@@ -5408,7 +5408,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unignore command
 	elseif ($answer[2] >= 2601 && $answer[2] <= 2800) {
-		$target = $player->playerlist[$answer[2]-2601]['login'];
+		$target = $player->playerlist[$answer[2]-2601]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unignore {2}"',
@@ -5431,7 +5431,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin kick command
 	elseif ($answer[2] >= 2801 && $answer[2] <= 3000) {
-		$target = $player->playerlist[$answer[2]-2801]['login'];
+		$target = $player->playerlist[$answer[2]-2801]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin kick {2}"',
@@ -5454,7 +5454,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin ban command
 	elseif ($answer[2] >= 3001 && $answer[2] <= 3200) {
-		$target = $player->playerlist[$answer[2]-3001]['login'];
+		$target = $player->playerlist[$answer[2]-3001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin ban {2}"',
@@ -5477,7 +5477,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unban command
 	elseif ($answer[2] >= 3201 && $answer[2] <= 3400) {
-		$target = $player->playerlist[$answer[2]-3201]['login'];
+		$target = $player->playerlist[$answer[2]-3201]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unban {2}"',
@@ -5500,7 +5500,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin black command
 	elseif ($answer[2] >= 3401 && $answer[2] <= 3600) {
-		$target = $player->playerlist[$answer[2]-3401]['login'];
+		$target = $player->playerlist[$answer[2]-3401]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin black {2}"',
@@ -5523,7 +5523,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unblack command
 	elseif ($answer[2] >= 3601 && $answer[2] <= 3800) {
-		$target = $player->playerlist[$answer[2]-3601]['login'];
+		$target = $player->playerlist[$answer[2]-3601]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unblack {2}"',
@@ -5546,7 +5546,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin addguest command
 	elseif ($answer[2] >= 3801 && $answer[2] <= 4000) {
-		$target = $player->playerlist[$answer[2]-3801]['login'];
+		$target = $player->playerlist[$answer[2]-3801]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin addguest {2}"',
@@ -5569,7 +5569,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin removeguest command
 	elseif ($answer[2] >= 4001 && $answer[2] <= 4200) {
-		$target = $player->playerlist[$answer[2]-4001]['login'];
+		$target = $player->playerlist[$answer[2]-4001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin removeguest {2}"',
@@ -5592,7 +5592,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin forcespec command
 	elseif ($answer[2] >= 4201 && $answer[2] <= 4400) {
-		$target = $player->playerlist[$answer[2]-4201]['login'];
+		$target = $player->playerlist[$answer[2]-4201]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin forcespec {2}"',
@@ -5615,7 +5615,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unignore command in listignores
 	elseif ($answer[2] >= 4401 && $answer[2] <= 4600) {
-		$target = $player->playerlist[$answer[2]-4401]['login'];
+		$target = $player->playerlist[$answer[2]-4401]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unignore {2}"',
@@ -5645,7 +5645,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unban command in listbans
 	elseif ($answer[2] >= 4601 && $answer[2] <= 4800) {
-		$target = $player->playerlist[$answer[2]-4601]['login'];
+		$target = $player->playerlist[$answer[2]-4601]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unban {2}"',
@@ -5675,7 +5675,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unblack command in listblacks
 	elseif ($answer[2] >= 4801 && $answer[2] <= 5000) {
-		$target = $player->playerlist[$answer[2]-4801]['login'];
+		$target = $player->playerlist[$answer[2]-4801]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unblack {2}"',
@@ -5705,7 +5705,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin removeguest command in listguests
 	elseif ($answer[2] >= 5001 && $answer[2] <= 5200) {
-		$target = $player->playerlist[$answer[2]-5001]['login'];
+		$target = $player->playerlist[$answer[2]-5001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin removeguest {2}"',
@@ -5735,7 +5735,7 @@ function event_admin($aseco, $answer) {
 
 	// check for /admin unbanip command
 	elseif ($answer[2] >= -8100 && $answer[2] <= -7901) {
-		$target = $player->playerlist[abs($answer[2])-7901]['ip'];
+		$target = $player->playerlist[abs($answer[2])-7901]['ip'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin unbanip {2}"',

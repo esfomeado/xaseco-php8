@@ -104,7 +104,7 @@ function chat_pma($aseco, $command) {
 			return;
 
 		// check for a message
-		if ($command['params'][1] != '') {
+		if (isset($command['params'][1]) && $command['params'][1] != '') {
 			$stamp = date('H:i:s');
 			// strip wide fonts from nicks
 			$plnick = str_ireplace('$w', '', $player->nickname);

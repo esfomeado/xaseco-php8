@@ -123,7 +123,7 @@ function event_players($aseco, $answer) {
 	if ($answer[2] >= 2001 && $answer[2] <= 2200) {
 		// get player
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$target = $player->playerlist[$answer[2]-2001]['login'];
+		$target = $player->playerlist[$answer[2]-2001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/stats {2}"',

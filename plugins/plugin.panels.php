@@ -834,7 +834,7 @@ function event_panels($aseco, $answer) {
 	if ($answer[2] >= -100 && $answer[2] <= -49) {
 		// get player & records panel
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$panel = $player->tracklist[abs($answer[2])-49]['panel'];
+		$panel = $player->tracklist[abs($answer[2])-49]['panel'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/recpanel {2}"',
@@ -850,7 +850,7 @@ function event_panels($aseco, $answer) {
 	elseif ($answer[2] >= -48 && $answer[2] <= -7) {
 		// get player & admin panel
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$panel = $player->tracklist[abs($answer[2])-7]['panel'];
+		$panel = $player->tracklist[abs($answer[2])-7]['panel'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin panel {2}"',
@@ -866,7 +866,7 @@ function event_panels($aseco, $answer) {
 	elseif ($answer[2] >= 37 && $answer[2] <= 48) {
 		// get player & vote panel
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$panel = $player->tracklist[$answer[2]-37]['panel'];
+		$panel = $player->tracklist[$answer[2]-37]['panel'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/votepanel {2}"',
@@ -882,7 +882,7 @@ function event_panels($aseco, $answer) {
 	elseif ($answer[2] >= 7201 && $answer[2] <= 7222) {
 		// get player & donate panel
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$panel = $player->tracklist[abs($answer[2])-7201]['panel'];
+		$panel = $player->tracklist[abs($answer[2])-7201]['panel'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/donpanel {2}"',

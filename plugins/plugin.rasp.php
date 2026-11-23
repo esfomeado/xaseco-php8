@@ -274,7 +274,7 @@ class Rasp {
 		}
 
 		if (!file_exists($aseco->server->trackdir . $tmxdir)) {
-			if (!mkdir($aseco->server->trackdir . $tmxdir)) {
+			if (!mkdir($aseco->server->trackdir . $tmxdir, 0777, true)) {  // incl. Challenges/ if missing
 				$aseco->console_text('{RASP_ERROR} TMX Directory (' . $aseco->server->trackdir . $tmxdir . ') cannot be created');
 			}
 		}

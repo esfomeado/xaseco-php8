@@ -24,6 +24,10 @@
  */
 
 Aseco::registerEvent('onPlayerConnect', 'player_connect');
+// make sure every connected player has a playerlist entry, also when another
+// plugin (e.g. Records-Eyepiece) unregisters player_connect for its own
+// join messages (PHP 5 silently created missing entries on first write)
+Aseco::registerEvent('onPlayerConnect', 'jfreu_ensure_player');
 Aseco::registerEvent('onPlayerDisconnect', 'player_disconnect');
 Aseco::registerEvent('onStartup', 'init_jfreu');
 Aseco::registerEvent('onEndRace', 'kick_hirank');
@@ -801,6 +805,12 @@ function vote_end($aseco)
 		$aseco->server->jfreu->current_vote = false;
 	}
 }  // vote_end
+
+function jfreu_ensure_player($aseco, $player)
+{
+	if (!isset($aseco->server->jfreu->playerlist[$player->login]))
+		ajouter_joueur_liste($aseco, $player->login, false, false);
+}  // jfreu_ensure_player
 
 function ajouter_joueur_liste($aseco, $login, $isvip, $speconly)
 {

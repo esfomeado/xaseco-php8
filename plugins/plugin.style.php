@@ -179,7 +179,7 @@ function event_style($aseco, $answer) {
 	if ($answer[2] >= 49 && $answer[2] <= 100) {
 		// get player & style
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$style = $player->tracklist[$answer[2]-49]['style'];
+		$style = $player->tracklist[$answer[2]-49]['style'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/style {2}"',

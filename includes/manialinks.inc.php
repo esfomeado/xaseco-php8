@@ -172,6 +172,9 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 		foreach ($data as $line) {
 			$xml .= '<line height=".046">';
 			if (!empty($line)) {
+				// a plain string is a single-column line (PHP 5's count() gave 1)
+				if (!is_array($line))
+					$line = array($line);
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (is_array($line[$i])) {
@@ -234,6 +237,9 @@ function display_manialink($login, $header, $icon, $data, $widths, $button) {
 		foreach ($data as $line) {
 			$cnt++;
 			if (!empty($line)) {
+				// a plain string is a single-column line (PHP 5's count() gave 1)
+				if (!is_array($line))
+					$line = array($line);
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (is_array($line[$i])) {
@@ -796,6 +802,9 @@ function event_manialink($aseco, $answer) {
 	// Handle multi-page ManiaLink windows in all styles
 	// update page pointer
 	$tot = count($player->msgs) - 1;
+	// nothing to page through (e.g. an empty list, or no window built yet)
+	if ($tot < 1)
+		return;
 	switch ($answer[2]) {
 	case -4:  $player->msgs[0][0] = 1; break;
 	case -3:  $player->msgs[0][0] -= 5; break;
@@ -844,6 +853,9 @@ function event_manialink($aseco, $answer) {
 		foreach ($player->msgs[$ptr] as $line) {
 			$xml .= '<line height=".046">';
 			if (!empty($line)) {
+				// a plain string is a single-column line (PHP 5's count() gave 1)
+				if (!is_array($line))
+					$line = array($line);
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (is_array($line[$i])) {
@@ -939,6 +951,9 @@ function event_manialink($aseco, $answer) {
 		foreach ($player->msgs[$ptr] as $line) {
 			$cnt++;
 			if (!empty($line)) {
+				// a plain string is a single-column line (PHP 5's count() gave 1)
+				if (!is_array($line))
+					$line = array($line);
 				if (count($line) > 1) {
 					for ($i = 0; $i < count($widths)-1; $i++) {
 						if (isset($line[$i])) {

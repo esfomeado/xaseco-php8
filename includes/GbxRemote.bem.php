@@ -205,9 +205,8 @@ class IXR_Message {
 		// Set XML parser to take the case of tags into account
 		xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, false);
 		// Set XML parser callback functions
-		xml_set_object($this->_parser, $this);
-		xml_set_element_handler($this->_parser, 'tag_open', 'tag_close');
-		xml_set_character_data_handler($this->_parser, 'cdata');
+		xml_set_element_handler($this->_parser, array($this, 'tag_open'), array($this, 'tag_close'));
+		xml_set_character_data_handler($this->_parser, array($this, 'cdata'));
 		if (!xml_parse($this->_parser, $this->message)) {
 			/* die(sprintf('GbxRemote XML error: %s at line %d',
 			               xml_error_string(xml_get_error_code($this->_parser)),

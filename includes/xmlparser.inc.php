@@ -27,9 +27,8 @@ class Examsly {
 
 		// create the parser
 		$this->parser = xml_parser_create();
-		xml_set_object($this->parser, $this);
-		xml_set_element_handler($this->parser, 'openTag', 'closeTag');
-		xml_set_character_data_handler($this->parser, 'tagData');
+		xml_set_element_handler($this->parser, array($this, 'openTag'), array($this, 'closeTag'));
+		xml_set_character_data_handler($this->parser, array($this, 'tagData'));
 
 		// load the xml file
 		if ($isfile)

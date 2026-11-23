@@ -1767,7 +1767,7 @@ function event_jukebox($aseco, $answer) {
 	elseif ($answer[2] >= -2000 && $answer[2] <= -101) {
 		// get player
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$author = $player->tracklist[abs($answer[2])-101]['author'];
+		$author = $player->tracklist[abs($answer[2])-101]['author'] ?? '';  // '' for a stale or unknown entry
 
 		// close main window because /list can take a while
 		mainwindow_off($aseco, $player->login);
@@ -1835,8 +1835,8 @@ function event_jukebox($aseco, $answer) {
 	elseif ($answer[2] >= 5201 && $answer[2] <= 5700) {
 		// get player & track ID
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$tmxid = $player->tracklist[$answer[2]-5201]['id'];
-		$section = $player->tracklist[$answer[2]-5201]['section'];
+		$tmxid = $player->tracklist[$answer[2]-5201]['id'] ?? '';  // '' for a stale or unknown entry
+		$section = $player->tracklist[$answer[2]-5201]['section'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/tmxinfo {2} {3}"',
@@ -1851,8 +1851,8 @@ function event_jukebox($aseco, $answer) {
 	elseif ($answer[2] >= 5701 && $answer[2] <= 6200) {
 		// get player & track ID
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$tmxid = $player->tracklist[$answer[2]-5701]['id'];
-		$section = $player->tracklist[$answer[2]-5701]['section'];
+		$tmxid = $player->tracklist[$answer[2]-5701]['id'] ?? '';  // '' for a stale or unknown entry
+		$section = $player->tracklist[$answer[2]-5701]['section'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/add {2} {3}"',
@@ -1867,8 +1867,8 @@ function event_jukebox($aseco, $answer) {
 	elseif ($answer[2] >= 6201 && $answer[2] <= 6700) {
 		// get player & track ID
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$tmxid = $player->tracklist[$answer[2]-6201]['id'];
-		$section = $player->tracklist[$answer[2]-6201]['section'];
+		$tmxid = $player->tracklist[$answer[2]-6201]['id'] ?? '';  // '' for a stale or unknown entry
+		$section = $player->tracklist[$answer[2]-6201]['section'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/admin add {2} {3}"',
@@ -1883,8 +1883,8 @@ function event_jukebox($aseco, $answer) {
 	elseif ($answer[2] >= 6701 && $answer[2] <= 7200) {
 		// get player & track author
 		$player = $aseco->server->players->getPlayer($answer[1]);
-		$author = $player->tracklist[$answer[2]-6701]['author'];
-		$section = $player->tracklist[$answer[2]-6701]['section'];
+		$author = $player->tracklist[$answer[2]-6701]['author'] ?? '';  // '' for a stale or unknown entry
+		$section = $player->tracklist[$answer[2]-6701]['section'] ?? '';  // '' for a stale or unknown entry
 		// insure multi-word author is single parameter
 		$author = str_replace(' ', '%20', $author);
 

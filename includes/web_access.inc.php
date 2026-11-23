@@ -914,8 +914,12 @@ class WebaccessUrl {
 	private function _callCallback($error = null) {
 
 		// store optional error message
-		if ($error !== null)
+		if ($error !== null) {
+			// no response yet: PHP 5 turned the '' into an array implicitly
+			if (!is_array($this->_spool[0]['Response']))
+				$this->_spool[0]['Response'] = array();
 			$this->_spool[0]['Response']['Error'] = $error;
+		}
 
 		// call callback func
 		if (isset($this->_spool[0]['Callback'])) {

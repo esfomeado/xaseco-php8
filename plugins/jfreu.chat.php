@@ -1384,7 +1384,7 @@ function chat_jfreu($aseco, $command)
 
 		$text = explode(' ', $arglist[1], 2);
 		// don't use $s as a subtle hint this isn't the actual player saying it
-		$message = '$z['.$target->nickname.'$z] '.$text[1];
+		$message = '$z['.$target->nickname.'$z] '.($text[1] ?? '');
 		$aseco->client->query('ChatSendServerMessage', $message);
 	}
 
@@ -1591,7 +1591,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu badword command
 	if ($answer[2] >= -4200 && $answer[2] <= -4001) {
-		$target = $player->playerlist[abs($answer[2])-4001]['login'];
+		$target = $player->playerlist[abs($answer[2])-4001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu badword {2}"',
@@ -1614,7 +1614,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu banfor 1H command
 	elseif ($answer[2] >= -4400 && $answer[2] <= -4201) {
-		$target = $player->playerlist[abs($answer[2])-4201]['login'];
+		$target = $player->playerlist[abs($answer[2])-4201]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu banfor 1H {2}"',
@@ -1637,7 +1637,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu banfor 24H command
 	elseif ($answer[2] >= -4600 && $answer[2] <= -4401) {
-		$target = $player->playerlist[abs($answer[2])-4401]['login'];
+		$target = $player->playerlist[abs($answer[2])-4401]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu banfor 24H {2}"',
@@ -1660,7 +1660,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu unban command
 	elseif ($answer[2] >= -4800 && $answer[2] <= -4601) {
-		$target = $player->playerlist[abs($answer[2])-4601]['login'];
+		$target = $player->playerlist[abs($answer[2])-4601]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu unban {2}"',
@@ -1683,7 +1683,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu addvip command
 	elseif ($answer[2] >= -5000 && $answer[2] <= -4801) {
-		$target = $player->playerlist[abs($answer[2])-4801]['login'];
+		$target = $player->playerlist[abs($answer[2])-4801]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu addvip {2}"',
@@ -1706,7 +1706,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu removevip command
 	elseif ($answer[2] >= -5200 && $answer[2] <= -5001) {
-		$target = $player->playerlist[abs($answer[2])-5001]['login'];
+		$target = $player->playerlist[abs($answer[2])-5001]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu removevip {2}"',
@@ -1729,7 +1729,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu unspec command
 	elseif ($answer[2] >= -5400 && $answer[2] <= -5201) {
-		$target = $player->playerlist[abs($answer[2])-5201]['login'];
+		$target = $player->playerlist[abs($answer[2])-5201]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu unspec {2}"',
@@ -1752,7 +1752,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu unban command in listbans
 	elseif ($answer[2] >= -5600 && $answer[2] <= -5401) {
-		$target = $player->playerlist[abs($answer[2])-5401]['login'];
+		$target = $player->playerlist[abs($answer[2])-5401]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu unban {2}"',
@@ -1790,7 +1790,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu removevip command in listvips
 	elseif ($answer[2] >= -5800 && $answer[2] <= -5601) {
-		$target = $player->playerlist[abs($answer[2])-5601]['login'];
+		$target = $player->playerlist[abs($answer[2])-5601]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu removevip {2}"',
@@ -1827,7 +1827,7 @@ function event_jfreu($aseco, $answer) {
 
 	// check for /jfreu removevipteam command in listvipteams
 	elseif ($answer[2] >= -6000 && $answer[2] <= -5801) {
-		$target = $player->playerlist[abs($answer[2])-5801]['login'];
+		$target = $player->playerlist[abs($answer[2])-5801]['login'] ?? '';  // '' for a stale or unknown entry
 
 		// log clicked command
 		$aseco->console('player {1} clicked command "/jfreu removevipteam {2}"',

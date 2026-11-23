@@ -783,6 +783,12 @@ function chat_dedistats($aseco, $command) {
 
 	$login = $command['author']->login;
 
+	// no Dedimania data for this track (e.g. Dedimania offline)
+	if (!isset($dedi_db['Challenge']['Uid'])) {
+		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors('{#server}> {#error}No Dedimania stats found!'), $login);
+		return;
+	}
+
 	// compile & display stats message
 	if ($aseco->server->getGame() == 'TMN') {
 		$stats = '{#dedimsg}Dedimania$g Stats: {#black}' . stripColors($aseco->server->challenge->name) . LF . LF;

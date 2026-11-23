@@ -256,7 +256,7 @@ function dedimania_connect($aseco) {
 				$aseco->console_text('  !!!' . CRLF . '  !!! ...with authentication warning(s): ' . $errors);
 		}
 		elseif (($errors = dedi_iserror($response)) !== false) {
-			$aseco->console_text('  !!!' . CRLF . '  !!! Connection Error !!! (' . $response['Headers']['server'][0] . ')' . CRLF . $errors . CRLF . '  !!!');
+			$aseco->console_text('  !!!' . CRLF . '  !!! Connection Error !!! (' . ($response['Headers']['server'][0] ?? '') . ')' . CRLF . $errors . CRLF . '  !!!');
 		}
 		elseif (!isset($response['Code'])) {
 			$aseco->console_text('  !!!' . CRLF . '  !!! Error no database response (' . $dedi_db['Url'] . ')' . CRLF . '  !!!');
@@ -497,7 +497,7 @@ function dedimania_newchallenge($aseco, $challenge) {
 		$aseco->console_text('dedimania_newchallenge - challenge' . CRLF . print_r($challenge, true));
 
 	// check for valid connection
-	$dedi_db['Challenge'] = array();
+	$dedi_db['Challenge'] = array('Records' => array());  // stays empty if Dedimania is offline
 	if (isset($dedi_db['XmlrpcDB']) && !$dedi_db['XmlrpcDB']->isBad()) {
 		// collect server & players info
 		$serverinfo = dedimania_serverinfo($aseco);
