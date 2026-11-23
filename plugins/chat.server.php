@@ -33,7 +33,7 @@ function chat_server($aseco, $command) {
 		$playtime = $totaltime - ($playdays * 24 * 3600);
 	} else {
 		if ($res) $res->free();
-		trigger_error('No players/nations stats found!', E_USER_ERROR);
+		triggerFatalError('No players/nations stats found!');
 	}
 
 	// get server uptime

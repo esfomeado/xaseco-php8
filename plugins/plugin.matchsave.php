@@ -1267,7 +1267,7 @@ function match_loadsettings() {
 	global $aseco, $MatchSettings, $matchOthersCanScore, $matchTeamNameColorsAllowed, $matchTeamNameMaxLength, $teamForceTeams;
 
 	if (!$settings = $aseco->xml_parser->parseXml('matchsave.xml')) {
-		trigger_error('Could not read/parse Matchsave config file matchsave.xml !', E_USER_ERROR);
+		triggerFatalError('Could not read/parse Matchsave config file matchsave.xml !');
 	}
 	$settings = $settings['MATCHSAVE_SETTINGS'];
 	$MatchSettings['savedb'] = strtolower($settings['SAVE_TO_DB'][0]) == 'true';

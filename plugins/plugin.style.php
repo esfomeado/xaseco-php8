@@ -29,7 +29,7 @@ function style_default($aseco) {
 			$aseco->style = $aseco->style['STYLES'];
 		} else {
 			// Could not parse XML file
-			trigger_error('Could not read/parse style file ' . $style_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read/parse style file ' . $style_file . ' !');
 		}
 	}
 }  // style_default

@@ -133,6 +133,16 @@ function displayError($errno, $errstr, $errfile, $errline) {
 }  // displayError
 
 /**
+ * Fatal error: reports like trigger_error($message, E_USER_ERROR) did and
+ * shuts XAseco down (passing E_USER_ERROR to trigger_error() is deprecated
+ * since PHP 8.4; displayError() still handles it for older plugins).
+ */
+function triggerFatalError($message) {
+	$caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+	displayError(E_USER_ERROR, $message, $caller['file'], $caller['line']);
+}  // triggerFatalError
+
+/**
  * Here XASECO actually starts.
  */
 #[\AllowDynamicProperties]  // plugins attach their own data
@@ -229,7 +239,7 @@ class Aseco {
 			$this->chat_messages = $aseco['MESSAGES'][0];
 			$this->masteradmin_list = $aseco['MASTERADMINS'][0];
 			if (!isset($this->masteradmin_list) || !is_array($this->masteradmin_list))
-				trigger_error('No MasterAdmin(s) configured in config.xml!', E_USER_ERROR);
+				triggerFatalError('No MasterAdmin(s) configured in config.xml!');
 
 			// check masteradmin list consistency
 			if (empty($this->masteradmin_list['IPADDRESS'])) {
@@ -452,14 +462,14 @@ class Aseco {
 			if ($this->settings['admin_client'] != '' &&
 			    preg_match('/^2\.11\.[12][0-9]$/', $this->settings['admin_client']) != 1 ||
 			    $this->settings['admin_client'] == '2.11.10')
-				trigger_error('Invalid admin client version : ' . $this->settings['admin_client'] . ' !', E_USER_ERROR);
+				triggerFatalError('Invalid admin client version : ' . $this->settings['admin_client'] . ' !');
 			if ($this->settings['player_client'] != '' &&
 			    preg_match('/^2\.11\.[12][0-9]$/', $this->settings['player_client']) != 1 ||
 			    $this->settings['player_client'] == '2.11.10')
-				trigger_error('Invalid player client version: ' . $this->settings['player_client'] . ' !', E_USER_ERROR);
+				triggerFatalError('Invalid player client version: ' . $this->settings['player_client'] . ' !');
 		} else {
 			// could not parse XML file
-			trigger_error('Could not read/parse config file ' . $config_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read/parse config file ' . $config_file . ' !');
 		}
 	}  // loadSettings
 
@@ -685,7 +695,7 @@ class Aseco {
 				}
 			}
 		} else {
-			trigger_error('Could not read/parse plugins list plugins.xml !', E_USER_ERROR);
+			triggerFatalError('Could not read/parse plugins list plugins.xml !');
 		}
 	}  // loadPlugins
 
@@ -714,7 +724,7 @@ class Aseco {
 		// connect to Trackmania Dedicated Server
 		if (!$this->connect()) {
 			// kill program with an error
-			trigger_error('Connection could not be established !', E_USER_ERROR);
+			triggerFatalError('Connection could not be established !');
 		}
 
 		// log status message
@@ -861,7 +871,7 @@ class Aseco {
 					$laststatus = $status['Name'];
 				}
 				if (isset($this->server->timeout) && $timeout++ > $this->server->timeout)
-					trigger_error('Timed out while waiting for dedicated server!', E_USER_ERROR);
+					triggerFatalError('Timed out while waiting for dedicated server!');
 			}
 		}
 	}  // waitServerReady
@@ -877,8 +887,8 @@ class Aseco {
 		if (strlen($this->server->build) == 0 ||
 		    ($this->server->getGame() != 'TMF' && strcmp($this->server->build, TMN_BUILD) < 0) ||
 		    ($this->server->getGame() == 'TMF' && strcmp($this->server->build, TMF_BUILD) < 0)) {
-			trigger_error("Obsolete server build '" . $this->server->build . "' - must be " .
-			              ($this->server->getGame() == 'TMF' ? "at least '" . TMF_BUILD . "' !" : "'" . TMN_BUILD . "' !"), E_USER_ERROR);
+			triggerFatalError("Obsolete server build '" . $this->server->build . "' - must be " .
+			                  ($this->server->getGame() == 'TMF' ? "at least '" . TMF_BUILD . "' !" : "'" . TMN_BUILD . "' !"));
 		}
 
 		// get server id, login, nickname, zone & packmask
@@ -1006,7 +1016,7 @@ class Aseco {
 		// now get the responses out of the 'buffer'
 		$calls = $this->client->getCBResponses();
 		if ($this->client->isError()) {
-			trigger_error('ExecCallbacks XMLRPC Error [' . $this->client->getErrorCode() . '] - ' . $this->client->getErrorMessage(), E_USER_ERROR);
+			triggerFatalError('ExecCallbacks XMLRPC Error [' . $this->client->getErrorCode() . '] - ' . $this->client->getErrorMessage());
 		}
 
 		if (!empty($calls)) {
@@ -1174,7 +1184,7 @@ class Aseco {
 		if ($this->client->multiquery()) {
 			if ($this->client->isError()) {
 				$this->console_text(print_r($tmpcalls, true));
-				trigger_error('ExecCalls XMLRPC Error [' . $this->client->getErrorCode() . '] - ' . $this->client->getErrorMessage(), E_USER_ERROR);
+				triggerFatalError('ExecCalls XMLRPC Error [' . $this->client->getErrorCode() . '] - ' . $this->client->getErrorMessage());
 			}
 
 			// get new response from server

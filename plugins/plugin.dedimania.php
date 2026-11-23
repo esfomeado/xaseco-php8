@@ -66,7 +66,7 @@ function dedimania_init($aseco) {
 
 	// check for checkpoints plugin
 	if (!isset($checkpoints) || !is_array($checkpoints))
-		trigger_error('Dedimania system cannot find $checkpoints - include plugin.checkpoints.php in plugins.xml!', E_USER_ERROR);
+		triggerFatalError('Dedimania system cannot find $checkpoints - include plugin.checkpoints.php in plugins.xml!');
 
 	// create web access
 	$dedi_webaccess = new Webaccess();
@@ -92,7 +92,7 @@ function dedimania_init($aseco) {
 				if (!is_array($dbdata['URL'][0]))
 					$dedi_db['Url'] = $dbdata['URL'][0];
 				else
-					trigger_error('Multiple URLs specified in your Dedimania config file!', E_USER_ERROR);
+					triggerFatalError('Multiple URLs specified in your Dedimania config file!');
 
 				if (isset($dbdata['WELCOME'][0]))
 					$dedi_db['Welcome'] = $dbdata['WELCOME'][0];
@@ -170,10 +170,10 @@ function dedimania_init($aseco) {
 				if ($dedi_db['Login'] == '' || $dedi_db['Login'] == 'YOUR_SERVER_LOGIN' ||
 				    $dedi_db['Password'] == '' || $dedi_db['Password'] == 'YOUR_SERVER_PASSWORD' ||
 				    $dedi_db['Nation'] == '' || $dedi_db['Nation'] == 'YOUR_SERVER_NATION')
-					trigger_error('Dedimania not configured! <masterserver_account> contains default or empty value(s)', E_USER_ERROR);
+					triggerFatalError('Dedimania not configured! <masterserver_account> contains default or empty value(s)');
 
 				if ($aseco->server->getGame() == 'TMF' && strtolower($dedi_db['Login']) != $aseco->server->serverlogin)
-					trigger_error('Dedimania misconfigured! <masterserver_account><login> (' . $dedi_db['Login'] . ') is not the actual server login (' . $aseco->server->serverlogin . ')', E_USER_ERROR);
+					triggerFatalError('Dedimania misconfigured! <masterserver_account><login> (' . $dedi_db['Login'] . ') is not the actual server login (' . $aseco->server->serverlogin . ')');
 
 				$dedi_db['Messages'] = &$config['DEDIMANIA']['MESSAGES'][0];
 				$dedi_db['RecsValid'] = false;
@@ -187,13 +187,13 @@ function dedimania_init($aseco) {
 				$dedi_db['ModeList'][Gameinfo::STNT] = '';
 				$dedi_db['ModeList'][Gameinfo::CUP]  = 'Rounds';
 			} else {
-				trigger_error('No URL specified in your Dedimania config file!', E_USER_ERROR);
+				triggerFatalError('No URL specified in your Dedimania config file!');
 			}
 		} else {
-			trigger_error('Structure error in your Dedimania config file!', E_USER_ERROR);
+			triggerFatalError('Structure error in your Dedimania config file!');
 		}
 	} else {
-		trigger_error('Could not read/parse Dedimania config file ' . DEDICONFIG . ' !', E_USER_ERROR);
+		triggerFatalError('Could not read/parse Dedimania config file ' . DEDICONFIG . ' !');
 	}
 
 	if ($dedi_debug > 1)
@@ -444,7 +444,7 @@ function dedimania_playerconnect_cb($response, $login) {
 
 		// check for banned player
 		if (!isset($response['Data']['params']['Status']))
-			trigger_error('Incomplete XASECO update - includes/xmlrpc_db.inc.php is out of date!', E_USER_ERROR);
+			triggerFatalError('Incomplete XASECO update - includes/xmlrpc_db.inc.php is out of date!');
 		if ($response['Data']['params']['Status'] % 2 == 1) {
 			// remember banned login
 			$dedi_db['BannedLogins'][] = $login;

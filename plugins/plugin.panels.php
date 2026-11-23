@@ -44,7 +44,7 @@ function panels_default($aseco) {
 		// load default panel
 		if (!$aseco->panels['admin'] = @file_get_contents($panel_file)) {
 			// Could not read XML file
-			trigger_error('Could not read admin panel file ' . $panel_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read admin panel file ' . $panel_file . ' !');
 		}
 	}
 
@@ -55,7 +55,7 @@ function panels_default($aseco) {
 		// load default panel
 		if (!$aseco->panels['donate'] = @file_get_contents($panel_file)) {
 			// Could not read XML file
-			trigger_error('Could not read donate panel file ' . $panel_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read donate panel file ' . $panel_file . ' !');
 		}
 	}
 
@@ -66,7 +66,7 @@ function panels_default($aseco) {
 		// load default panel
 		if (!$aseco->panels['records'] = @file_get_contents($panel_file)) {
 			// Could not read XML file
-			trigger_error('Could not read records panel file ' . $panel_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read records panel file ' . $panel_file . ' !');
 		}
 	}
 
@@ -77,7 +77,7 @@ function panels_default($aseco) {
 		// load default panel
 		if (!$aseco->panels['vote'] = @file_get_contents($panel_file)) {
 			// Could not read XML file
-			trigger_error('Could not read vote panel file ' . $panel_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read vote panel file ' . $panel_file . ' !');
 		}
 	}
 }  // panels_default
@@ -90,7 +90,7 @@ function init_statspanel($aseco) {
 		$aseco->console('Load stats panel [{1}]', $panel_file);
 		if (!$aseco->statspanel = @file_get_contents($panel_file)) {
 			// Could not read XML file
-			trigger_error('Could not read stats panel file ' . $panel_file . ' !', E_USER_ERROR);
+			triggerFatalError('Could not read stats panel file ' . $panel_file . ' !');
 		}
 	}
 }  // init_statspanel

@@ -5144,7 +5144,7 @@ function chat_admin($aseco, $command) {
 	 */
 	} elseif ($command['params'][0] == 'shutdown') {
 
-		trigger_error('Shutdown XASECO!', E_USER_ERROR);
+		triggerFatalError('Shutdown XASECO!');
 
 	/**
 	 * Shuts down Server & XASECO.
@@ -5164,7 +5164,7 @@ function chat_admin($aseco, $command) {
 			if ($autoquit->InitWithIp($aseco->server->ip, $aseco->server->port))
 				$aseco->client->query('QuitGame');
 
-			trigger_error('Shutdown ' . $aseco->server->getGame() . ' server & XASECO!', E_USER_ERROR);
+			triggerFatalError('Shutdown ' . $aseco->server->getGame() . ' server & XASECO!');
 		}
 
 	/**

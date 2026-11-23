@@ -42,11 +42,11 @@ class Rasp {
 		$this->aseco = $aseco_ext;
 		$this->aseco->console('[RASP] Loading config file [' . $config_file . ']');
 		if (!$this->settings = $this->xmlparse($config_file)) {
-			trigger_error('{RASP_ERROR} Could not read/parse config file ' . $config_file . ' !', E_USER_ERROR);
+			triggerFatalError('{RASP_ERROR} Could not read/parse config file ' . $config_file . ' !');
 		} else {
 			$this->aseco->console('[RASP] Checking database structure...');
 			if (!$this->checkTables()) {
-				trigger_error('{RASP_ERROR} Table structure incorrect!  Use localdb/rasp.sql to correct this', E_USER_ERROR);
+				triggerFatalError('{RASP_ERROR} Table structure incorrect!  Use localdb/rasp.sql to correct this');
 			}
 			$this->aseco->console('[RASP] ...Structure OK!');
 			$this->aseco->server->records->setLimit($maxrecs);
@@ -259,7 +259,7 @@ class Rasp {
 
 		// check for missing challenge list
 		if (empty($tlist)) {
-			trigger_error('{RASP_ERROR} Cannot obtain challenge list from server and/or database - check configuration files!', E_USER_ERROR);
+			triggerFatalError('{RASP_ERROR} Cannot obtain challenge list from server and/or database - check configuration files!');
 		}
 		$this->challenges = $tlist;
 	}  // getChallenges

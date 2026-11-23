@@ -29,7 +29,7 @@ function ldb_loadSettings($aseco) {
 
 	$aseco->console('[LocalDB] Load config file [localdatabase.xml]');
 	if (!$settings = $aseco->xml_parser->parseXml('localdatabase.xml')) {
-		trigger_error('Could not read/parse Local database config file localdatabase.xml !', E_USER_ERROR);
+		triggerFatalError('Could not read/parse Local database config file localdatabase.xml !');
 	}
 	$settings = $settings['SETTINGS'];
 
@@ -141,7 +141,7 @@ function ldb_connect($aseco) {
 	$check[3] = in_array('records', $tables);
 	$check[4] = in_array('players_extra', $tables);
 	if (!($check[1] && $check[2] && $check[3] && $check[4])) {
-		trigger_error('[LocalDB] Table structure incorrect!  Use localdb/aseco.sql & extra.sql to correct this', E_USER_ERROR);
+		triggerFatalError('[LocalDB] Table structure incorrect!  Use localdb/aseco.sql & extra.sql to correct this');
 	}
 
 	// enlarge challenges 'Name' colum
@@ -296,12 +296,12 @@ function ldb_open($aseco) {
 	$aseco->db->connect_params = array($host, $ldb_settings['mysql']['login'], $ldb_settings['mysql']['password'],
 	                                   $ldb_settings['mysql']['database'], $port, $socket);
 	if ($aseco->db->connect_errno) {
-		trigger_error('[LocalDB] Could not authenticate at MySQL server! (' . $aseco->db->connect_error . ')', E_USER_ERROR);
+		triggerFatalError('[LocalDB] Could not authenticate at MySQL server! (' . $aseco->db->connect_error . ')');
 	}
 	$ldb_settings['mysql']['connection'] = $aseco->db;
 
 	if (!$aseco->db->select_db($ldb_settings['mysql']['database'])) {
-		trigger_error('[LocalDB] Could not find MySQL database!', E_USER_ERROR);
+		triggerFatalError('[LocalDB] Could not find MySQL database!');
 	}
 }  // ldb_open
 
@@ -342,7 +342,7 @@ class XasecoDB extends mysqli {
 	public function query_or_die(string $query): mysqli_result {
 		$result = $this->query($query);
 		if (!$result instanceof mysqli_result) {
-			trigger_error('[LocalDB] Could not check the database structure! (' . $this->errno . ': ' . $this->error . ')' . CRLF . 'sql = ' . $query, E_USER_ERROR);
+			triggerFatalError('[LocalDB] Could not check the database structure! (' . $this->errno . ': ' . $this->error . ')' . CRLF . 'sql = ' . $query);
 		}
 		return $result;
 	}

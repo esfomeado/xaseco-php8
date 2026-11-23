@@ -143,7 +143,7 @@ function music_loadsettings($aseco) {
 	// read & parse config file
 	$aseco->console('Load music server config [musicserver.xml]');
 	if (!$settings = $aseco->xml_parser->parseXml('musicserver.xml')) {
-		trigger_error('Could not read/parse Music server config file musicserver.xml !', E_USER_ERROR);
+		triggerFatalError('Could not read/parse Music server config file musicserver.xml !');
 	}
 	$music_server = new Music($settings['SETTINGS']);
 
